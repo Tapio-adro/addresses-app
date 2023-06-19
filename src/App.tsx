@@ -11,8 +11,17 @@ import './App.css'
 function App() {
   console.log(streetsData);
 
+  const streetsList = streetsData.map(streetObject =>
+    <li>
+      { streetObject.name }
+    </li>
+  );
+
   return (
     <>
+      <ul>
+        {streetsList}
+      </ul>
     </>
   )
 }
