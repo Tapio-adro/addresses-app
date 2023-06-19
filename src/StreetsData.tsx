@@ -1,4 +1,4 @@
-const streets: string[] = [
+let streets: string[] = [
   "Pusta",
   "Handlowa",
   "Molerowa",
@@ -66,7 +66,20 @@ type StreetObject = {
   name: string;
   isEnabled: boolean;
   isEnabledByDefault: boolean;
-  
+  adresses: string[];
 }
 
-export default streets;
+let streetsData: StreetObject[] = [];
+
+for (const street of streets) {
+  let isEnabledByDefault = defaultStreets.includes(street);
+  let streetObject: StreetObject = {
+    name: street,
+    isEnabled: isEnabledByDefault,
+    isEnabledByDefault: isEnabledByDefault,
+    adresses: []
+  }
+  streetsData.push(streetObject);
+}
+
+export default streetsData;
