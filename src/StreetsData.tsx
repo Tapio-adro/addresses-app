@@ -64,6 +64,7 @@ let defaultStreets: string[] = [
 
 type StreetObject = {
   name: string;
+  index: number;
   isEnabled: boolean;
   isEnabledByDefault: boolean;
   adresses: string[];
@@ -71,10 +72,11 @@ type StreetObject = {
 
 let streetsData: StreetObject[] = [];
 
-for (const street of streets) {
+for (const [index, street] of streets.entries()) {
   let isEnabledByDefault = defaultStreets.includes(street);
   let streetObject: StreetObject = {
     name: street,
+    index: index,
     isEnabled: isEnabledByDefault,
     isEnabledByDefault: isEnabledByDefault,
     adresses: []
