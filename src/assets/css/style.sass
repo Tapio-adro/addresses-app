@@ -1,5 +1,6 @@
 $lightgreen: #06e090
 $green: #04AA6D
+$blue: #06a9e0
 $lightgrey: #f3f3f3
 $grey: #ddd
 $midgrey: #999999
@@ -25,7 +26,6 @@ main
 
 #sidebar
   position: fixed
-  // border: 1px solid #000
   right: 0
   top: 0
   width: 50px
@@ -40,10 +40,11 @@ main
   flex-direction: column
   align-items: center
   row-gap: 10px
-  padding-top: 10px
+  padding: 10px 0
   width: 100%
-  height: 100%
-  svg
+  // height: 100%
+  button
+    line-height: 0
     box-sizing: border-box
     padding: 7px
     color: $midgrey
@@ -51,3 +52,33 @@ main
     height: 30px
     border-radius: 5px
     border: 2px solid $midgrey
+    display: flex
+    justify-content: center
+    align-items: center
+  #reset_button
+    margin-top: auto
+  #defaults_button
+    padding: 0
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+    row-gap: 4.5px
+    div
+      height: 1.5px
+      width: 16px
+      background-color: $midgrey
+    div#midline
+      background-color: $blue
+#toggle_sidebar_button
+  width: 30px
+  height: 30px
+  margin: 10px
+  display: flex
+  justify-content: center
+  align-items: center
+  font-size: 15px
+  background-color: $lightgrey
+  border-radius: 5px
+  border: 1px solid $midgrey
+  color: $midgrey

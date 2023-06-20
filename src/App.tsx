@@ -11,7 +11,7 @@ import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { faSquareCheck } from "@fortawesome/free-solid-svg-icons";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 
 function App() {
@@ -43,12 +43,27 @@ function App() {
             <button>
               <FontAwesomeIcon icon={faEye} />
             </button>
-            <FontAwesomeIcon icon={faLocationDot} />
-            <FontAwesomeIcon icon={faSquareCheck} />
-            <FontAwesomeIcon icon={faPen} />
-            <FontAwesomeIcon icon={faRotateRight} />
+            <button>
+              <FontAwesomeIcon icon={faSquareCheck} />
+            </button>
+            <button>
+              <FontAwesomeIcon icon={faLocationDot} />
+            </button>
+            <button>
+              <FontAwesomeIcon icon={faPen} />
+            </button>
+            <button id="defaults_button">
+              <div></div>
+              <div id="midline"></div>
+              <div></div>
+            </button>
+            <button id="reset_button">
+              <FontAwesomeIcon icon={faRotateRight} />
+            </button>
           </div>
-          {/* <FontAwesomeIcon icon={faArrowLeft} /> */}
+          <button id="toggle_sidebar_button">
+            <FontAwesomeIcon icon={faAngleLeft} />
+          </button>
         </div>
       </main>
     </>

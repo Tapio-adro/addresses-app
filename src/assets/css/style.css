@@ -38,11 +38,11 @@ main {
   flex-direction: column;
   align-items: center;
   row-gap: 10px;
-  padding-top: 10px;
+  padding: 10px 0;
   width: 100%;
-  height: 100%;
 }
-#action_buttons svg {
+#action_buttons button {
+  line-height: 0;
   box-sizing: border-box;
   padding: 7px;
   color: #999999;
@@ -50,4 +50,40 @@ main {
   height: 30px;
   border-radius: 5px;
   border: 2px solid #999999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#action_buttons #reset_button {
+  margin-top: auto;
+}
+#action_buttons #defaults_button {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 4.5px;
+}
+#action_buttons #defaults_button div {
+  height: 1.5px;
+  width: 16px;
+  background-color: #999999;
+}
+#action_buttons #defaults_button div#midline {
+  background-color: #06a9e0;
+}
+
+#toggle_sidebar_button {
+  width: 30px;
+  height: 30px;
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+  background-color: #f3f3f3;
+  border-radius: 5px;
+  border: 1px solid #999999;
+  color: #999999;
 }/*# sourceMappingURL=style.css.map */
