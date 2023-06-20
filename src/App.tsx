@@ -1,4 +1,4 @@
-// import React, { useState } from 'react'
+import { useState } from 'react'
 import classNames from 'classnames';
 import streetsData from './StreetsData.tsx';
 // import reactLogo from './assets/react.svg'
@@ -15,6 +15,8 @@ import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 
 function App() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
+
   const streetsList = streetsData.map(streetObject => {
     let listItemClasses = classNames(
       "list_item",
@@ -33,35 +35,87 @@ function App() {
   return (
     <>
       <main>
+        <div 
+          id="dark_background" 
+          className={isSidebarOpen ? "shown" : ""}
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
         <div id="list">
           {streetsList}
         </div>
         <div
           id="sidebar"
+          className={isSidebarOpen ? "open" : ""}
         >
           <div id="action_buttons">
-            <button>
-              <FontAwesomeIcon icon={faEye} />
-            </button>
-            <button>
-              <FontAwesomeIcon icon={faSquareCheck} />
-            </button>
-            <button>
-              <FontAwesomeIcon icon={faLocationDot} />
-            </button>
-            <button>
-              <FontAwesomeIcon icon={faPen} />
-            </button>
-            <button id="defaults_button">
-              <div></div>
-              <div id="midline"></div>
-              <div></div>
-            </button>
-            <button id="reset_button">
-              <FontAwesomeIcon icon={faRotateRight} />
-            </button>
+            <div className="button_wrapper">
+              <div className="button_container">
+                <button>
+                  <FontAwesomeIcon icon={faEye} />
+                </button>
+              </div>
+              <div className="button_desc">
+                Режим перегляду
+              </div>
+            </div>
+            <div className="button_wrapper">
+              <div className="button_container">
+                <button>
+                  <FontAwesomeIcon icon={faSquareCheck} />
+                </button>
+              </div>
+              <div className="button_desc">
+                Режим позначення відвіданих адрес
+              </div>
+            </div>
+            <div className="button_wrapper">
+              <div className="button_container">
+                <button>
+                  <FontAwesomeIcon icon={faLocationDot} />
+                </button>
+              </div>
+              <div className="button_desc">
+                Режим редагування адрес
+              </div>
+            </div>
+            <div className="button_wrapper">
+              <div className="button_container">
+                <button>
+                  <FontAwesomeIcon icon={faPen} />
+                </button>
+              </div>
+              <div className="button_desc">
+                Режим редагування списку вулиць
+              </div>
+            </div>
+            <div className="button_wrapper">
+              <div className="button_container">
+                <button id="defaults_button">
+                  <div></div>
+                  <div id="midline"></div>
+                  <div></div>
+                </button>
+              </div>
+              <div className="button_desc">
+                Режим редагування списку вулиць за замовчуванням
+              </div>
+            </div>
+            <div className="button_wrapper">
+              <div className="button_container" id="reset_button_container">
+                <button>
+                  <FontAwesomeIcon icon={faRotateRight} />
+                </button>
+              </div>
+              <div className="button_desc" id="reset_button_desc">
+                Скинути все
+              </div>
+            </div>
           </div>
-          <button id="toggle_sidebar_button">
+          <button
+            id="toggle_sidebar_button"
+            className={isSidebarOpen ? "open" : ""}
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          >
             <FontAwesomeIcon icon={faAngleLeft} />
           </button>
         </div>

@@ -26,11 +26,17 @@ main {
   position: fixed;
   right: 0;
   top: 0;
-  width: 50px;
+  width: 200px;
   height: 100vh;
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
+  background-color: #fff;
+  transform: translateX(150px);
+  transition: transform 0.5s ease-in-out;
+}
+#sidebar.open {
+  transform: translateX(0px);
 }
 
 #action_buttons {
@@ -38,8 +44,33 @@ main {
   flex-direction: column;
   align-items: center;
   row-gap: 10px;
-  padding: 10px 0;
   width: 100%;
+  padding-top: 10px;
+  height: calc(100vh - 50px);
+}
+#action_buttons .button_wrapper {
+  width: 100%;
+  display: flex;
+}
+#action_buttons .button_container {
+  width: 50px;
+  display: flex;
+  justify-content: center;
+}
+#action_buttons #reset_button_container {
+  margin-left: 40px;
+}
+#action_buttons .button_desc {
+  font-size: 10px;
+  width: 140px;
+  font-family: sans-serif;
+  background-color: #f3f3f3;
+  padding: 5px;
+  border-radius: 5px;
+  margin: auto 0;
+}
+#action_buttons #reset_button_desc {
+  width: 100px;
 }
 #action_buttons button {
   line-height: 0;
@@ -84,6 +115,39 @@ main {
   font-size: 15px;
   background-color: #f3f3f3;
   border-radius: 5px;
-  border: 1px solid #999999;
+  border: 2px solid #999999;
   color: #999999;
+  cursor: pointer;
+  transition: 0.5s;
+}
+#toggle_sidebar_button svg {
+  transform: scaleX(1);
+  transition: 0.5s;
+  display: block;
+}
+#toggle_sidebar_button.open {
+  border-color: #04AA6D;
+  background-color: #fff;
+}
+#toggle_sidebar_button.open svg {
+  transform: scaleX(-1) translateX(-0.5px);
+  color: #04AA6D;
+}
+
+#dark_background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: 0.5s;
+}
+#dark_background.shown {
+  opacity: 1;
+  pointer-events: all;
+  -webkit-backdrop-filter: blur(2px);
+          backdrop-filter: blur(2px);
 }/*# sourceMappingURL=style.css.map */
