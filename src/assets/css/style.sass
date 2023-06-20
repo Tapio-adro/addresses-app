@@ -1,6 +1,7 @@
 $lightgreen: #06e090
 $green: #04AA6D
 $blue: #6ad7fb
+$red: #fb6a6a
 $lightgrey: #f3f3f3
 $grey: #ddd
 $midgrey: #999999
@@ -18,7 +19,10 @@ main
   height: 100vh
 #list
   display: grid
-  grid-template-columns: 10px max-content
+  grid-template-columns: 5px max-content
+  transition: 0.5s
+  &.any_streets_mode
+    grid-template-columns: 10px max-content
 #list .list_item_wrapper
   display: flex
 #list .list_item
@@ -32,10 +36,28 @@ main
   display: inline-block
   width: 5px
   margin-right: 5px
-  height: 22.5px
+  height: 100%
   background-color: $grey
+  transition: 0.25s
+  &.hidden
+    opacity: 0
+  .indicator_inner
+    margin-left: 1px
+    height: 100%
+    width: 4px
+    transition: 0.25s
+    background-color: $red
+    opacity: 0
   &.blue
     background-color: $blue
+  &.blue_red
+    background-color: $blue
+    .indicator_inner
+      opacity: 1
+  &.red
+    background-color: $red
+  &.green
+    background-color: $lightgreen
   
 
 #sidebar

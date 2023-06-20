@@ -18,37 +18,74 @@ import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
-  const [appMode, setAppMode] = useState<string>("default streets")
+  const [appMode, setAppMode] = useState<string>('default streets')
   const [streets, setStreets] = useState<StreetObject[]>(initialStreets)
 
+  function changeAppMode (mode: string) {
+    setAppMode(mode)
+    if (isSidebarOpen) {
+      setIsSidebarOpen(false)
+    }
+  }
+
   function handleItemClick(itemIndex: number) {
-    const nextStreets = streets.map(street => {
-      if (street.index == itemIndex) {
+    const nextStreets: StreetObject[] = streets.map(street => {
+      if (street.index != itemIndex) {
+        return street;
+      }
+      if (appMode == 'default streets') {
         return {
           ...street,
           isEnabledByDefault: !street.isEnabledByDefault
         };
+      } else if (appMode == 'streets') {
+        return {
+          ...street,
+          isEnabled: !street.isEnabled
+        };      
       }
       return street;
     });
-    // Re-render with the new array
     setStreets(nextStreets);
   }
 
   const streetsList = streets.map(street => {
     let listItemClasses = classNames(
-      "list_item",
+      'list_item',
       {'grey_bg': street.index % 2 == 0}
     );
-    let listIndicatorClasses = classNames(
-      "list_indicator",
-      {'blue': street.isEnabledByDefault}
-    );
+
+    let isModeStreetRelated = appMode == 'default streets' || appMode == 'streets';
+    let listIndicatorClasses;
+
+    if (!isModeStreetRelated) {
+      listIndicatorClasses = classNames(
+        'list_indicator',
+        'hidden'
+      );
+    } else if (appMode == 'default streets') {
+      listIndicatorClasses = classNames(
+        'list_indicator',
+        {'blue': street.isEnabledByDefault}
+      );
+    } else if (appMode == 'streets') {
+      listIndicatorClasses = classNames(
+        'list_indicator',
+        {
+          'blue':      street.isEnabled &&  street.isEnabledByDefault,
+          'blue_red': !street.isEnabled &&  street.isEnabledByDefault,
+          'red':      !street.isEnabled && !street.isEnabledByDefault,
+          'green':     street.isEnabled && !street.isEnabledByDefault,
+        }
+      );
+    }
     return (
       <React.Fragment key={street.index}>
         <div
           className={listIndicatorClasses}
-        ></div>
+        >
+          <div className="indicator_inner"></div>
+        </div>
         <div
           className={listItemClasses}
           onClick={() => handleItemClick(street.index)}
@@ -69,7 +106,9 @@ function App() {
           className={isSidebarOpen ? "shown" : ""}
           onClick={() => setIsSidebarOpen(false)}
         ></div>
-        <div id="list">
+        <div id="list"
+          className={appMode == "default streets" || appMode == "streets" ? "any_streets_mode" : ""}
+        >
           {streetsList}
         </div>
         <div
@@ -79,7 +118,7 @@ function App() {
           <div id="action_buttons">
             <div className="button_wrapper">
               <div className="button_container">
-              <button onClick={() => setAppMode('view')} className={appMode == 'view' ? "active" : ""}>
+              <button onClick={() => changeAppMode('view')} className={appMode == 'view' ? "active" : ""}>
 
                   <FontAwesomeIcon icon={faEye} />
                 </button>
@@ -90,7 +129,7 @@ function App() {
             </div>
             <div className="button_wrapper">
               <div className="button_container">
-                <button onClick={() => setAppMode('checklist')} className={appMode == 'checklist' ? "active" : ""}>
+                <button onClick={() => changeAppMode('checklist')} className={appMode == 'checklist' ? "active" : ""}>
                   <FontAwesomeIcon icon={faSquareCheck} />
                 </button>
               </div>
@@ -100,7 +139,7 @@ function App() {
             </div>
             <div className="button_wrapper">
               <div className="button_container">
-                <button onClick={() => setAppMode('adresses')} className={appMode == 'adresses' ? "active" : ""}>
+                <button onClick={() => changeAppMode('adresses')} className={appMode == 'adresses' ? "active" : ""}>
                   <FontAwesomeIcon icon={faLocationDot} />
                 </button>
               </div>
@@ -110,7 +149,7 @@ function App() {
             </div>
             <div className="button_wrapper">
               <div className="button_container">
-                <button onClick={() => setAppMode('streets')} className={appMode == 'streets' ? "active" : ""}>
+                <button onClick={() => changeAppMode('streets')} className={appMode == 'streets' ? "active" : ""}>
                   <FontAwesomeIcon icon={faPen} />
                 </button>
               </div>
@@ -120,7 +159,7 @@ function App() {
             </div>
             <div className="button_wrapper">
               <div className="button_container">
-                <button onClick={() => setAppMode('default streets')} className={appMode == 'default streets' ? "active" : ""} id="defaults_button">
+                <button onClick={() => changeAppMode('default streets')} className={appMode == 'default streets' ? "active" : ""} id="defaults_button">
                   <div></div>
                   <div id="midline"></div>
                   <div></div>

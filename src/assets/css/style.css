@@ -12,6 +12,10 @@ main {
 
 #list {
   display: grid;
+  grid-template-columns: 5px max-content;
+  transition: 0.5s;
+}
+#list.any_streets_mode {
   grid-template-columns: 10px max-content;
 }
 
@@ -33,11 +37,35 @@ main {
   display: inline-block;
   width: 5px;
   margin-right: 5px;
-  height: 22.5px;
+  height: 100%;
   background-color: #ddd;
+  transition: 0.25s;
+}
+#list .list_indicator.hidden {
+  opacity: 0;
+}
+#list .list_indicator .indicator_inner {
+  margin-left: 1px;
+  height: 100%;
+  width: 4px;
+  transition: 0.25s;
+  background-color: #fb6a6a;
+  opacity: 0;
 }
 #list .list_indicator.blue {
   background-color: #6ad7fb;
+}
+#list .list_indicator.blue_red {
+  background-color: #6ad7fb;
+}
+#list .list_indicator.blue_red .indicator_inner {
+  opacity: 1;
+}
+#list .list_indicator.red {
+  background-color: #fb6a6a;
+}
+#list .list_indicator.green {
+  background-color: #06e090;
 }
 
 #sidebar {
