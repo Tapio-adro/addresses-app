@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import classNames from 'classnames';
-import streetsData from './StreetsData.tsx';
+import initialStreets from './StreetsData.tsx';
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 import './assets/css/style.css'
+
+import { StreetObject } from './assets/shared/lib/types'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
@@ -16,19 +18,46 @@ import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
+  const [appMode, setAppMode] = useState<string>("default streets")
+  const [streets, setStreets] = useState<StreetObject[]>(initialStreets)
 
-  const streetsList = streetsData.map(streetObject => {
+  function handleItemClick(itemIndex: number) {
+    const nextStreets = streets.map(street => {
+      if (street.index == itemIndex) {
+        return {
+          ...street,
+          isEnabledByDefault: !street.isEnabledByDefault
+        };
+      }
+      return street;
+    });
+    // Re-render with the new array
+    setStreets(nextStreets);
+  }
+
+  const streetsList = streets.map(street => {
     let listItemClasses = classNames(
       "list_item",
-      {'grey_bg': streetObject.index % 2 == 0}
+      {'grey_bg': street.index % 2 == 0}
+    );
+    let listIndicatorClasses = classNames(
+      "list_indicator",
+      {'blue': street.isEnabledByDefault}
     );
     return (
-      <div
-        className={listItemClasses}
-        key={streetObject.index}
+      <React.Fragment key={street.index}>
+        <div
+          className={listIndicatorClasses}
+        ></div>
+        <div
+          className={listItemClasses}
+          onClick={() => handleItemClick(street.index)}
         >
-        { streetObject.name }  
-      </div>
+          { street.name }  
+        </div>
+        {/* <div className="list_item_wrapper">
+        </div> */}
+      </React.Fragment>
     )
   });
 
@@ -50,7 +79,8 @@ function App() {
           <div id="action_buttons">
             <div className="button_wrapper">
               <div className="button_container">
-                <button>
+              <button onClick={() => setAppMode('view')} className={appMode == 'view' ? "active" : ""}>
+
                   <FontAwesomeIcon icon={faEye} />
                 </button>
               </div>
@@ -60,7 +90,7 @@ function App() {
             </div>
             <div className="button_wrapper">
               <div className="button_container">
-                <button>
+                <button onClick={() => setAppMode('checklist')} className={appMode == 'checklist' ? "active" : ""}>
                   <FontAwesomeIcon icon={faSquareCheck} />
                 </button>
               </div>
@@ -70,7 +100,7 @@ function App() {
             </div>
             <div className="button_wrapper">
               <div className="button_container">
-                <button>
+                <button onClick={() => setAppMode('adresses')} className={appMode == 'adresses' ? "active" : ""}>
                   <FontAwesomeIcon icon={faLocationDot} />
                 </button>
               </div>
@@ -80,7 +110,7 @@ function App() {
             </div>
             <div className="button_wrapper">
               <div className="button_container">
-                <button>
+                <button onClick={() => setAppMode('streets')} className={appMode == 'streets' ? "active" : ""}>
                   <FontAwesomeIcon icon={faPen} />
                 </button>
               </div>
@@ -90,7 +120,7 @@ function App() {
             </div>
             <div className="button_wrapper">
               <div className="button_container">
-                <button id="defaults_button">
+                <button onClick={() => setAppMode('default streets')} className={appMode == 'default streets' ? "active" : ""} id="defaults_button">
                   <div></div>
                   <div id="midline"></div>
                   <div></div>

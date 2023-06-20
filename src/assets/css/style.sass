@@ -1,6 +1,6 @@
 $lightgreen: #06e090
 $green: #04AA6D
-$blue: #06a9e0
+$blue: #6ad7fb
 $lightgrey: #f3f3f3
 $grey: #ddd
 $midgrey: #999999
@@ -12,17 +12,31 @@ body
   overflow-y: hidden
 main
   padding: 10px
+  padding-left: 5px
   margin-right: 50px
   overflow-y: scroll
   height: 100vh
 #list
-  display: inline-block
+  display: grid
+  grid-template-columns: 10px max-content
+#list .list_item_wrapper
+  display: flex
 #list .list_item
+  display: inline-block
   padding: 2px 4px
   color: $darkgrey
   border-radius: 5px
   &.grey_bg
     background: $lightgrey
+#list .list_indicator
+  display: inline-block
+  width: 5px
+  margin-right: 5px
+  height: 22.5px
+  background-color: $grey
+  &.blue
+    background-color: $blue
+  
 
 #sidebar
   position: fixed
@@ -82,6 +96,9 @@ main
     display: flex
     justify-content: center
     align-items: center
+    &.active
+      color: $green
+      border-color: $green
   #reset_button
     margin-top: auto
   #defaults_button
@@ -91,10 +108,14 @@ main
     justify-content: center
     align-items: center
     row-gap: 4.5px
+    transition: 0.5s   
     div
       height: 1.5px
       width: 16px
       background-color: $midgrey
+      transition: 0.5s   
+    &.active div
+      background-color: $green
     div#midline
       background-color: $blue
 #toggle_sidebar_button

@@ -4,22 +4,40 @@ body {
 
 main {
   padding: 10px;
+  padding-left: 5px;
   margin-right: 50px;
   overflow-y: scroll;
   height: 100vh;
 }
 
 #list {
-  display: inline-block;
+  display: grid;
+  grid-template-columns: 10px max-content;
+}
+
+#list .list_item_wrapper {
+  display: flex;
 }
 
 #list .list_item {
+  display: inline-block;
   padding: 2px 4px;
   color: #404040;
   border-radius: 5px;
 }
 #list .list_item.grey_bg {
   background: #f3f3f3;
+}
+
+#list .list_indicator {
+  display: inline-block;
+  width: 5px;
+  margin-right: 5px;
+  height: 22.5px;
+  background-color: #ddd;
+}
+#list .list_indicator.blue {
+  background-color: #6ad7fb;
 }
 
 #sidebar {
@@ -85,6 +103,10 @@ main {
   justify-content: center;
   align-items: center;
 }
+#action_buttons button.active {
+  color: #04AA6D;
+  border-color: #04AA6D;
+}
 #action_buttons #reset_button {
   margin-top: auto;
 }
@@ -95,14 +117,19 @@ main {
   justify-content: center;
   align-items: center;
   row-gap: 4.5px;
+  transition: 0.5s;
 }
 #action_buttons #defaults_button div {
   height: 1.5px;
   width: 16px;
   background-color: #999999;
+  transition: 0.5s;
+}
+#action_buttons #defaults_button.active div {
+  background-color: #04AA6D;
 }
 #action_buttons #defaults_button div#midline {
-  background-color: #06a9e0;
+  background-color: #6ad7fb;
 }
 
 #toggle_sidebar_button {

@@ -62,13 +62,7 @@ let defaultStreets: string[] = [
   "Kopernika",
 ];
 
-type StreetObject = {
-  name: string;
-  index: number;
-  isEnabled: boolean;
-  isEnabledByDefault: boolean;
-  adresses: string[];
-}
+import { StreetObject } from './assets/shared/lib/types'
 
 let streetsData: StreetObject[] = [];
 
