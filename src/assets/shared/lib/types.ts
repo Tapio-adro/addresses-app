@@ -3,5 +3,5 @@ export type StreetObject = {
   index: number;
   isEnabled: boolean;
   isEnabledByDefault: boolean;
-  adresses: string[];
+  addresses: string[];
 }

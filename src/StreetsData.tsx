@@ -33,7 +33,6 @@ let streets: string[] = [
   "Betonowa",
   "Konopnickiej",
   "Nowopogońska",
-  "Grota-Roweckiego",
   "Prusa",
   "Stawowa",
   "Matejki",
@@ -73,7 +72,7 @@ for (const [index, street] of streets.entries()) {
     index: index,
     isEnabled: isEnabledByDefault,
     isEnabledByDefault: isEnabledByDefault,
-    adresses: []
+    addresses: ['']
   }
   streetsData.push(streetObject);
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import classNames from 'classnames';
 import initialStreets from './StreetsData.tsx';
 // import reactLogo from './assets/react.svg'
@@ -36,7 +36,8 @@ function App() {
       if (appMode == 'default streets') {
         return {
           ...street,
-          isEnabledByDefault: !street.isEnabledByDefault
+          isEnabledByDefault: !street.isEnabledByDefault,
+          isEnabled: !street.isEnabledByDefault
         };
       } else if (appMode == 'streets') {
         return {
@@ -79,6 +80,13 @@ function App() {
         }
       );
     }
+
+    let addressesList = street.addresses.map(address =>
+      <div className="input_container">
+        <input type="text" className="address_input" value={address} key={address}/>
+      </div>
+    );
+
     return (
       <div className="list_item_wrapper" key={street.index}>
         <div
@@ -86,14 +94,15 @@ function App() {
         >
           <div className="indicator_inner"></div>
         </div>
-        <div
-          className={listItemClasses}
-          onClick={() => handleItemClick(street.index)}
-        >
-          { street.name }  
+        <div className="list_item_container">
+          <div
+            className={listItemClasses}
+            onClick={() => handleItemClick(street.index)}
+          >
+            { street.name }  
+          </div>
+          {addressesList}
         </div>
-        {/* <div className="list_item_wrapper">
-        </div> */}
       </div>
     )
   });
@@ -139,7 +148,7 @@ function App() {
             </div>
             <div className="button_wrapper">
               <div className="button_container">
-                <button onClick={() => changeAppMode('adresses')} className={appMode == 'adresses' ? "active" : ""}>
+                <button onClick={() => changeAppMode('addresses')} className={appMode == 'addresses' ? "active" : ""}>
                   <FontAwesomeIcon icon={faLocationDot} />
                 </button>
               </div>

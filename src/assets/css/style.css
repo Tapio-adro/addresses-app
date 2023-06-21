@@ -17,6 +17,11 @@ main {
   display: flex;
 }
 
+#list .list_item_container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 #list .list_item {
   display: block;
   padding: 2px 4px;
@@ -60,6 +65,25 @@ main {
 }
 #list .list_indicator.green {
   background-color: #06e090;
+}
+
+#list .input_container {
+  height: 22.4px;
+  display: flex;
+  align-items: center;
+}
+
+#list input[type=text] {
+  font-size: 10px;
+  width: 30px;
+  padding: 2px;
+  margin: 0 4px;
+  outline: none;
+  border: 1px solid #666;
+  border-radius: 3px;
+}
+#list input[type=text]:focus {
+  border: 1px solid #04AA6D;
 }
 
 #sidebar {
