@@ -81,9 +81,14 @@ main {
   outline: none;
   border: 1px solid #666;
   border-radius: 3px;
+  transition: 0.5s;
 }
 #list input[type=text]:focus {
   border: 1px solid #04AA6D;
+}
+#list input[type=text].hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 #sidebar {
@@ -98,6 +103,7 @@ main {
   background-color: #fff;
   transform: translateX(150px);
   transition: transform 0.5s ease-in-out;
+  z-index: 2;
 }
 #sidebar.open {
   transform: translateX(0px);
@@ -217,6 +223,7 @@ main {
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 0;
   transition: 0.5s;
+  z-index: 1;
 }
 #dark_background.shown {
   opacity: 1;

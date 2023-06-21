@@ -73,7 +73,9 @@ for (const [index, street] of streets.entries()) {
     isEnabled: isEnabledByDefault,
     isEnabledByDefault: isEnabledByDefault,
     lastAddressIndex: 1,
-    addresses: [{value: "", index: 0, isDefault: false}]
+    lastDefaultAddressIndex: 1,
+    addresses: [{value: "", index: 0}],
+    defaultAddresses: [{value: "", index: 0}]
   }
   streetsData.push(streetObject);
 }

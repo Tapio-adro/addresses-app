@@ -5,7 +5,7 @@ import initialStreets from './StreetsData.tsx';
 // import viteLogo from '/vite.svg'
 import './assets/css/style.css'
 
-import { StreetObject } from './assets/shared/lib/types'
+import { StreetObject, AddressObject } from './assets/shared/lib/types'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
@@ -34,10 +34,15 @@ function App() {
         return street;
       }
       if (appMode == 'default streets') {
+        let shouldRemoveDefaultAddresses = street.isEnabledByDefault
+        let newDefaultAddresses = shouldRemoveDefaultAddresses ? [{value: "", index: 0}] : street.defaultAddresses
+        let newLastDefaultAddressIndex = shouldRemoveDefaultAddresses ? street.lastDefaultAddressIndex + 1 : street.lastDefaultAddressIndex
         return {
           ...street,
           isEnabledByDefault: !street.isEnabledByDefault,
-          isEnabled: !street.isEnabledByDefault
+          isEnabled: !street.isEnabledByDefault,
+          defaultAddresses: newDefaultAddresses,
+          lastDefaultAddressIndex: newLastDefaultAddressIndex
         };
       } else if (appMode == 'streets') {
         return {
@@ -56,14 +61,16 @@ function App() {
         return street;
       }
       const value = event.target.value
-      for (let key in street.addresses) {
-        let address = street.addresses[key];
+      let targetAddressesKey = (appMode == 'default streets' ? 'defaultAddresses' : 'addresses') as keyof typeof street
+      let targetAddresses: AddressObject[] = street[targetAddressesKey] as AddressObject[];
+      for (let key in targetAddresses) {
+        let address = targetAddresses[key];
         if (address.index == addressIndex) {
-          let newAddresses = street.addresses.slice();
+          let newAddresses = targetAddresses.slice();
           newAddresses[key].value = value;
           return {
             ...street,
-            addresses: newAddresses
+            [targetAddressesKey]: newAddresses
           };
         }
       }
@@ -77,23 +84,32 @@ function App() {
         return street;
       }
       const value = event.target.value
-      for (let key in street.addresses) {
-        let address = street.addresses[key];
+      let targetAddressesKey = (appMode == 'default streets' ? 'defaultAddresses' : 'addresses') as keyof typeof street
+      let targetAddresses: AddressObject[] = street[targetAddressesKey] as AddressObject[];
+      let targetLastAddressIndexKey = (appMode == 'default streets' ? 'lastDefaultAddressIndex' : 'lastAddressIndex') as keyof typeof street
+      let targetLastAddressIndex: number = street[targetLastAddressIndexKey] as number;
+
+      console.log(targetAddressesKey);
+
+      for (let key in targetAddresses) {
+        let address = targetAddresses[key];
         if (address.index == addressIndex) {
-          let newAddresses = street.addresses.slice();
+          let newAddresses = targetAddresses.slice();
           let shouldIncrementIndex = false;
-          if (value == "" && newAddresses.length != 1) {
+          console.log(newAddresses);
+          if (value == '' && newAddresses.length != 1) {
             newAddresses = newAddresses.filter((address) => {
               return address.index != addressIndex;
             })          
-          } else if (newAddresses.slice(-1)[0].value != "") {
-              newAddresses.push({value: "", index: street.lastAddressIndex, isDefault: false})
+          } else if (newAddresses.slice(-1)[0].value != '') {
+              newAddresses.push({value: '', index: targetLastAddressIndex})
             shouldIncrementIndex = true;
           }
+          console.log(newAddresses);
           return {
             ...street,
-            lastAddressIndex: shouldIncrementIndex ? street.lastAddressIndex + 1 : street.lastAddressIndex,
-            addresses: newAddresses
+            [targetAddressesKey]: newAddresses,
+            [targetLastAddressIndexKey]: shouldIncrementIndex ? targetLastAddressIndex + 1 : targetLastAddressIndex
           };
         }
       }
@@ -133,11 +149,16 @@ function App() {
       );
     }
 
-    let addressesList = street.addresses.map(address =>
+    let streetAddressClasses = classNames(
+      'address_input',
+      {'hidden': appMode == 'streets' || (appMode == 'default streets' && !street.isEnabledByDefault)}
+    );
+    let addressesType = appMode == 'default streets' ? street.defaultAddresses : street.addresses
+    let addressesList = addressesType.map(address =>
       <div className="input_container" key={address.index}>
-        <input 
+        <input
           type="text" 
-          className="address_input" 
+          className={streetAddressClasses}
           value={address.value} 
           onChange={(event) => handleInputChange(street.index, address.index, event)}
           onBlur={(event) => handleInputBlur(street.index, address.index, event)}

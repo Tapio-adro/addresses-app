@@ -76,8 +76,12 @@ main
   outline: none
   border: 1px solid $textgrey
   border-radius: 3px
+  transition: 0.5s
   &:focus
     border: 1px solid $green
+  &.hidden
+    opacity: 0
+    pointer-events: none
   
 
 #sidebar
@@ -92,6 +96,7 @@ main
   background-color: #fff
   transform: translateX(150px)
   transition: transform 0.5s ease-in-out
+  z-index: 2
   &.open
     transform: translateX(0px)
 
@@ -195,6 +200,7 @@ main
   background-color: transparentize(#000, 0.5)
   opacity: 0
   transition: 0.5s
+  z-index: 1
   &.shown
     opacity: 1
     pointer-events: all
