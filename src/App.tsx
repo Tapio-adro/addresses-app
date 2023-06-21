@@ -71,6 +71,36 @@ function App() {
     });
     setStreets(nextStreets);
   }
+  function handleInputBlur (streetIndex: number, addressIndex: number, event: React.ChangeEvent<HTMLInputElement>) {
+    const nextStreets: StreetObject[] = streets.map(street => {
+      if (street.index != streetIndex) {
+        return street;
+      }
+      const value = event.target.value
+      for (let key in street.addresses) {
+        let address = street.addresses[key];
+        if (address.index == addressIndex) {
+          let newAddresses = street.addresses.slice();
+          let shouldIncrementIndex = false;
+          if (value == "" && newAddresses.length != 1) {
+            newAddresses = newAddresses.filter((address) => {
+              return address.index != addressIndex;
+            })          
+          } else if (newAddresses.slice(-1)[0].value != "") {
+              newAddresses.push({value: "", index: street.lastAddressIndex, isDefault: false})
+            shouldIncrementIndex = true;
+          }
+          return {
+            ...street,
+            lastAddressIndex: shouldIncrementIndex ? street.lastAddressIndex + 1 : street.lastAddressIndex,
+            addresses: newAddresses
+          };
+        }
+      }
+      return street;
+    });
+    setStreets(nextStreets);
+  }
 
   const streetsList = streets.map(street => {
     let listItemClasses = classNames(
@@ -105,7 +135,13 @@ function App() {
 
     let addressesList = street.addresses.map(address =>
       <div className="input_container" key={address.index}>
-        <input type="text" className="address_input" value={address.value} onChange={(event) => handleInputChange(street.index, address.index, event)}/>
+        <input 
+          type="text" 
+          className="address_input" 
+          value={address.value} 
+          onChange={(event) => handleInputChange(street.index, address.index, event)}
+          onBlur={(event) => handleInputBlur(street.index, address.index, event)}
+        />
       </div>
     );
 

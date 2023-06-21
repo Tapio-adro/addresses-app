@@ -76,7 +76,7 @@ main {
 #list input[type=text] {
   font-size: 10px;
   width: 30px;
-  padding: 2px;
+  padding: 1px 2px;
   margin: 0 4px;
   outline: none;
   border: 1px solid #666;

@@ -8,5 +8,6 @@ export type StreetObject = {
   index: number;
   isEnabled: boolean;
   isEnabledByDefault: boolean;
+  lastAddressIndex: number,
   addresses: AddressObject[];
 }
