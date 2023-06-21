@@ -28,14 +28,14 @@ function App() {
     }
   }
 
-  function handleItemClick(itemIndex: number) {
+  function handleStreetClick(streetIndex: number) {
     const nextStreets: StreetObject[] = streets.map(street => {
-      if (street.index != itemIndex) {
+      if (street.index != streetIndex) {
         return street;
       }
       if (appMode == 'default streets') {
         let shouldRemoveDefaultAddresses = street.isEnabledByDefault
-        let newDefaultAddresses = shouldRemoveDefaultAddresses ? [{value: "", index: 0}] : street.defaultAddresses
+        let newDefaultAddresses = shouldRemoveDefaultAddresses ? [{value: "", index: street.lastDefaultAddressIndex}] : street.defaultAddresses
         let newLastDefaultAddressIndex = shouldRemoveDefaultAddresses ? street.lastDefaultAddressIndex + 1 : street.lastDefaultAddressIndex
         return {
           ...street,
@@ -45,9 +45,14 @@ function App() {
           lastDefaultAddressIndex: newLastDefaultAddressIndex
         };
       } else if (appMode == 'streets') {
+        let shouldRemoveAddresses = street.isEnabled
+        let newAddresses = shouldRemoveAddresses ? [{value: "", index: street.lastAddressIndex}] : street.addresses
+        let newLastAddressIndex = shouldRemoveAddresses ? street.lastAddressIndex + 1 : street.lastAddressIndex
         return {
           ...street,
-          isEnabled: !street.isEnabled
+          isEnabled: !street.isEnabled,
+          addresses: newAddresses,
+          lastAddressIndex: newLastAddressIndex
         };      
       }
       return street;
@@ -118,7 +123,7 @@ function App() {
   }
 
   const streetsList = streets.filter((street) => {
-    if (appMode == 'addresses') {
+    if (appMode == 'addresses' || appMode == 'checklist') {
       return street.isEnabled;
     } else {
       return true;
@@ -159,17 +164,40 @@ function App() {
       {'hidden': appMode == 'streets' || (appMode == 'default streets' && !street.isEnabledByDefault)}
     );
     let addressesType = appMode == 'default streets' ? street.defaultAddresses : street.addresses
-    let addressesList = addressesType.map(address =>
-      <div className="input_container" key={address.index}>
-        <input
-          type="text" 
-          className={streetAddressClasses}
-          value={address.value} 
-          onChange={(event) => handleInputChange(street.index, address.index, event)}
-          onBlur={(event) => handleInputBlur(street.index, address.index, event)}
-        />
+    let addressesList = addressesType.filter((address) => {
+      if (appMode == 'checklist') {
+        return address.value != '';
+      } else {
+        return true;
+      }
+    }).map(address => {
+      if (appMode == 'addresses') {
+        return (
+        <div className="address_container" key={address.index}>
+          <input
+            type="text" 
+            className={streetAddressClasses}
+            value={address.value} 
+            onChange={(event) => handleInputChange(street.index, address.index, event)}
+            onBlur={(event) => handleInputBlur(street.index, address.index, event)}
+          />
+        </div>
+        )
+      } else if (appMode == 'checklist') {
+        return (
+          <div className="address_container" key={address.index}>
+            <div className="address">{address.value}</div>
+          </div>
+        )
+      }
+    });
+    let defaultAddressesList = appMode == 'addresses' || appMode == 'checklist' ? street.defaultAddresses.filter((address) => {
+      return address.value != '';
+    }).map(address => 
+      <div className="address_container" key={address.index}>
+        <div className="address default">{address.value}</div>
       </div>
-    );
+    ) : null;
 
     return (
       <div className="list_item_wrapper" key={street.index}>
@@ -181,11 +209,12 @@ function App() {
         <div className="list_item_container">
           <div
             className={listItemClasses}
-            onClick={() => handleItemClick(street.index)}
+            onClick={() => handleStreetClick(street.index)}
           >
             { street.name }  
           </div>
-          {addressesList}
+          { defaultAddressesList }
+          { addressesList }
         </div>
       </div>
     )

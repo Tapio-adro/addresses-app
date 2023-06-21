@@ -1,6 +1,7 @@
 $lightgreen: #06e090
 $green: #04AA6D
-$blue: #6ad7fb
+$lightblue: #6ad7fb
+$blue: #06bcf9
 $red: #fb6a6a
 $lightgrey: #f3f3f3
 $grey: #ddd
@@ -53,26 +54,27 @@ main
     background-color: $red
     opacity: 0
   &.blue
-    background-color: $blue
+    background-color: $lightblue
   &.blue_red
-    background-color: $blue
+    background-color: $lightblue
     .indicator_inner
       opacity: 1
   &.red
     background-color: $red
   &.green
     background-color: $lightgreen
-#list .input_container
+#list .address_container
   height: 22.4px
   display: flex
   align-items: center
+  padding-top: 2px
 #list input[type="text"]
   // font-size: 16px
   // height: 12px
   font-size: 10px
   width: 30px
   padding: 1px 2px
-  margin: 0 4px
+  margin: 0 2px
   outline: none
   border: 1px solid $textgrey
   border-radius: 3px
@@ -82,7 +84,20 @@ main
   &.hidden
     opacity: 0
     pointer-events: none
-  
+#list .address
+  font-size: 10px
+  padding: 1px 2px
+  margin: 0 2px
+  border: 1px solid $green
+  border-radius: 3px
+  transition: 0.5s
+  font-family: sans-serif
+  color: $textgrey
+  color: $green
+  &.default
+    color: $blue
+    // font-weight: bold
+    border-color: $blue
 
 #sidebar
   position: fixed
@@ -164,7 +179,7 @@ main
     &.active div
       background-color: $green
     div#midline
-      background-color: $blue
+      background-color: $lightblue
 #toggle_sidebar_button
   width: 30px
   height: 30px
