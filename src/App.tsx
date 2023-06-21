@@ -50,6 +50,28 @@ function App() {
     setStreets(nextStreets);
   }
 
+  function handleInputChange (streetIndex: number, addressIndex: number, event: React.ChangeEvent<HTMLInputElement>) {
+    const nextStreets: StreetObject[] = streets.map(street => {
+      if (street.index != streetIndex) {
+        return street;
+      }
+      const value = event.target.value
+      for (let key in street.addresses) {
+        let address = street.addresses[key];
+        if (address.index == addressIndex) {
+          let newAddresses = street.addresses.slice();
+          newAddresses[key].value = value;
+          return {
+            ...street,
+            addresses: newAddresses
+          };
+        }
+      }
+      return street;
+    });
+    setStreets(nextStreets);
+  }
+
   const streetsList = streets.map(street => {
     let listItemClasses = classNames(
       'list_item',
@@ -82,8 +104,8 @@ function App() {
     }
 
     let addressesList = street.addresses.map(address =>
-      <div className="input_container">
-        <input type="text" className="address_input" value={address} key={address}/>
+      <div className="input_container" key={address.index}>
+        <input type="text" className="address_input" value={address.value} onChange={(event) => handleInputChange(street.index, address.index, event)}/>
       </div>
     );
 
