@@ -59,12 +59,13 @@ for (const [index, street] of streets.entries()) {
   let streetObject: StreetObject = {
     name: street,
     index: index,
+    isVisited: false,
     isEnabled: isEnabledByDefault,
     isEnabledByDefault: isEnabledByDefault,
     lastAddressIndex: 1,
     lastDefaultAddressIndex: 1,
-    addresses: [{value: '', index: 0}],
-    defaultAddresses: [{value: '', index: 0}]
+    addresses: [{value: '', index: 0, isVisited: false}],
+    defaultAddresses: [{value: '', index: 0, isVisited: false}]
   }
   streetsData.push(streetObject);
 }

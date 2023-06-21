@@ -30,6 +30,7 @@ main {
 }
 #list .list_item.grey_bg {
   background: #f3f3f3;
+  margin-right: 3px;
 }
 
 #list .list_indicator {
@@ -106,6 +107,11 @@ main {
 #list .address.default {
   color: #06bcf9;
   border-color: #06bcf9;
+}
+#list .address.marked {
+  text-decoration: line-through;
+  color: #999999;
+  border-color: #bfbfbf;
 }
 
 #sidebar {

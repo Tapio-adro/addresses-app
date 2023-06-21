@@ -4,7 +4,8 @@ $lightblue: #6ad7fb
 $blue: #06bcf9
 $red: #fb6a6a
 $lightgrey: #f3f3f3
-$grey: #ddd
+$midlightgrey: #ddd
+$grey: #bfbfbf
 $midgrey: #999999
 $textgrey: #666
 $darkgrey: #404040
@@ -36,12 +37,13 @@ main
   border-radius: 5px
   &.grey_bg
     background: $lightgrey
+    margin-right: 3px
 #list .list_indicator
   display: block
   width: 5px
   margin-right: 5px
   // height: 1fr
-  background-color: $grey
+  background-color: $midlightgrey
   transition: 0.25s
   &.hidden
     opacity: 0
@@ -96,8 +98,11 @@ main
   color: $green
   &.default
     color: $blue
-    // font-weight: bold
     border-color: $blue
+  &.marked
+    text-decoration: line-through
+    color: $midgrey
+    border-color: $grey
 
 #sidebar
   position: fixed

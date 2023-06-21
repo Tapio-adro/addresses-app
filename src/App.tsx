@@ -35,7 +35,7 @@ function App() {
       }
       if (appMode == 'default streets') {
         let shouldRemoveDefaultAddresses = street.isEnabledByDefault
-        let newDefaultAddresses = shouldRemoveDefaultAddresses ? [{value: "", index: street.lastDefaultAddressIndex}] : street.defaultAddresses
+        let newDefaultAddresses = shouldRemoveDefaultAddresses ? [{value: "", index: street.lastDefaultAddressIndex, isVisited: false}] : street.defaultAddresses
         let newLastDefaultAddressIndex = shouldRemoveDefaultAddresses ? street.lastDefaultAddressIndex + 1 : street.lastDefaultAddressIndex
         return {
           ...street,
@@ -46,7 +46,7 @@ function App() {
         };
       } else if (appMode == 'streets') {
         let shouldRemoveAddresses = street.isEnabled
-        let newAddresses = shouldRemoveAddresses ? [{value: "", index: street.lastAddressIndex}] : street.addresses
+        let newAddresses = shouldRemoveAddresses ? [{value: "", index: street.lastAddressIndex, isVisited: false}] : street.addresses
         let newLastAddressIndex = shouldRemoveAddresses ? street.lastAddressIndex + 1 : street.lastAddressIndex
         return {
           ...street,
@@ -54,6 +54,24 @@ function App() {
           addresses: newAddresses,
           lastAddressIndex: newLastAddressIndex
         };      
+      }
+      return street;
+    });
+    setStreets(nextStreets);
+  }
+  function handleAddressClick (streetIndex: number, IsDefaultAddress: boolean, addressIndex: number) {
+    const nextStreets: StreetObject[] = streets.map(street => {
+      if (street.index != streetIndex || appMode != 'checklist') {
+        return street;
+      }
+      let targetAddressesKey = IsDefaultAddress ? 'defaultAddresses' : 'addresses'  as keyof typeof street
+      let targetAddresses: AddressObject[] = street[targetAddressesKey] as AddressObject[];
+      for (let key in targetAddresses) {
+        let address = targetAddresses[key];
+        if (address.index == addressIndex) {
+          address.isVisited = !address.isVisited;
+          break;
+        }
       }
       return street;
     });
@@ -106,7 +124,7 @@ function App() {
               return address.index != addressIndex;
             })          
           } else if (newAddresses.slice(-1)[0].value != '') {
-              newAddresses.push({value: '', index: targetLastAddressIndex})
+              newAddresses.push({value: '', index: targetLastAddressIndex, isVisited: false})
             shouldIncrementIndex = true;
           }
           console.log(newAddresses);
@@ -171,7 +189,7 @@ function App() {
         return true;
       }
     }).map(address => {
-      if (appMode == 'addresses') {
+      if (appMode == 'addresses' || appMode == 'default streets') {
         return (
         <div className="address_container" key={address.index}>
           <input
@@ -184,20 +202,31 @@ function App() {
         </div>
         )
       } else if (appMode == 'checklist') {
+        let addressDisplayClasses = classNames(
+          'address',
+          {'marked': address.isVisited}
+        )
         return (
           <div className="address_container" key={address.index}>
-            <div className="address">{address.value}</div>
+            <div className={addressDisplayClasses} onClick={() => handleAddressClick(street.index, false, address.index)}>{address.value}</div>
           </div>
         )
       }
     });
     let defaultAddressesList = appMode == 'addresses' || appMode == 'checklist' ? street.defaultAddresses.filter((address) => {
       return address.value != '';
-    }).map(address => 
-      <div className="address_container" key={address.index}>
-        <div className="address default">{address.value}</div>
-      </div>
-    ) : null;
+    }).map(address => {
+      let addressDisplayClasses = classNames(
+        'address',
+        'default',
+        {'marked': address.isVisited}
+      )
+      return (
+        <div className="address_container" key={address.index}>
+          <div className={addressDisplayClasses} onClick={() => handleAddressClick(street.index, true, address.index)}>{address.value}</div>
+        </div>
+      )
+    }) : null;
 
     return (
       <div className="list_item_wrapper" key={street.index}>
