@@ -54,6 +54,11 @@ function App() {
           addresses: newAddresses,
           lastAddressIndex: newLastAddressIndex
         };      
+      } else if (appMode == 'checklist') {
+        return {
+          ...street,
+          isVisited: !street.isVisited
+        };
       }
       return street;
     });
@@ -149,7 +154,10 @@ function App() {
   }).map(street => {
     let listItemClasses = classNames(
       'list_item',
-      {'grey_bg': street.index % 2 == 0}
+      {
+        'grey_bg': street.index % 2 == 0,
+        'marked': street.isVisited && appMode == 'checklist'
+      }
     );
 
     let isModeStreetRelated = appMode == 'default streets' || appMode == 'streets';
