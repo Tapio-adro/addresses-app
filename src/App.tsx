@@ -54,7 +54,6 @@ function App() {
     });
     setStreets(nextStreets);
   }
-
   function handleInputChange (streetIndex: number, addressIndex: number, event: React.ChangeEvent<HTMLInputElement>) {
     const nextStreets: StreetObject[] = streets.map(street => {
       if (street.index != streetIndex) {
@@ -118,7 +117,13 @@ function App() {
     setStreets(nextStreets);
   }
 
-  const streetsList = streets.map(street => {
+  const streetsList = streets.filter((street) => {
+    if (appMode == 'addresses') {
+      return street.isEnabled;
+    } else {
+      return true;
+    }
+  }).map(street => {
     let listItemClasses = classNames(
       'list_item',
       {'grey_bg': street.index % 2 == 0}
