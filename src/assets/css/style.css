@@ -11,20 +11,14 @@ main {
 }
 
 #list {
-  display: grid;
-  grid-template-columns: 5px max-content;
   transition: 0.5s;
 }
-#list.any_streets_mode {
-  grid-template-columns: 10px max-content;
-}
-
 #list .list_item_wrapper {
   display: flex;
 }
 
 #list .list_item {
-  display: inline-block;
+  display: block;
   padding: 2px 4px;
   color: #404040;
   border-radius: 5px;
@@ -34,15 +28,15 @@ main {
 }
 
 #list .list_indicator {
-  display: inline-block;
+  display: block;
   width: 5px;
   margin-right: 5px;
-  height: 100%;
   background-color: #ddd;
   transition: 0.25s;
 }
 #list .list_indicator.hidden {
   opacity: 0;
+  margin-right: 0px;
 }
 #list .list_indicator .indicator_inner {
   margin-left: 1px;

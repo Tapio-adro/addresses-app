@@ -80,7 +80,7 @@ function App() {
       );
     }
     return (
-      <React.Fragment key={street.index}>
+      <div className="list_item_wrapper" key={street.index}>
         <div
           className={listIndicatorClasses}
         >
@@ -94,7 +94,7 @@ function App() {
         </div>
         {/* <div className="list_item_wrapper">
         </div> */}
-      </React.Fragment>
+      </div>
     )
   });
 
