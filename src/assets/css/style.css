@@ -140,7 +140,7 @@ main {
   transform: translateX(0px);
 }
 
-#action_buttons {
+#mode_buttons {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -149,21 +149,21 @@ main {
   padding-top: 10px;
   height: calc(100vh - 50px);
 }
-#action_buttons .button_wrapper {
+#mode_buttons .button_wrapper {
   width: 100%;
   height: 30px;
   display: flex;
 }
-#action_buttons .button_container {
+#mode_buttons .button_container {
   height: 30px;
   width: 50px;
   display: flex;
   justify-content: center;
 }
-#action_buttons #reset_button_container {
+#mode_buttons #reset_button_container {
   margin-left: 40px;
 }
-#action_buttons .button_desc {
+#mode_buttons .button_desc {
   font-size: 10px;
   width: 140px;
   font-family: sans-serif;
@@ -172,10 +172,10 @@ main {
   border-radius: 5px;
   margin: auto 0;
 }
-#action_buttons #reset_button_desc {
+#mode_buttons #reset_button_desc {
   width: 100px;
 }
-#action_buttons button {
+#mode_buttons button {
   line-height: 0;
   box-sizing: border-box;
   padding: 7px;
@@ -188,14 +188,21 @@ main {
   justify-content: center;
   align-items: center;
 }
-#action_buttons button.active {
+#mode_buttons button.active {
   color: #04AA6D;
   border-color: #04AA6D;
 }
-#action_buttons #reset_button {
+#mode_buttons .canceled_button.active {
+  color: #fb6a6a;
+}
+#mode_buttons .canceled_button #plus_icon {
+  font-size: 12px;
+  margin-right: 2px;
+}
+#mode_buttons #reset_button {
   margin-top: auto;
 }
-#action_buttons #defaults_button {
+#mode_buttons #defaults_button {
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -204,16 +211,16 @@ main {
   row-gap: 4.5px;
   transition: 0.5s;
 }
-#action_buttons #defaults_button div {
+#mode_buttons #defaults_button div {
   height: 1.5px;
   width: 16px;
   background-color: #999999;
   transition: 0.5s;
 }
-#action_buttons #defaults_button.active div {
+#mode_buttons #defaults_button.active div {
   background-color: #04AA6D;
 }
-#action_buttons #defaults_button div#midline {
+#mode_buttons #defaults_button div#midline {
   background-color: #6ad7fb;
 }
 

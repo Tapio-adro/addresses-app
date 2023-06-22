@@ -8,7 +8,8 @@ import './assets/css/style.css'
 import { StreetObject, AddressObject } from './assets/shared/lib/types'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faExclamation } from "@fortawesome/free-solid-svg-icons";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { faSquareCheck } from "@fortawesome/free-solid-svg-icons";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
@@ -35,7 +36,7 @@ function App() {
       }
       if (appMode == 'default streets') {
         let shouldRemoveDefaultAddresses = street.isEnabledByDefault
-        let newDefaultAddresses = shouldRemoveDefaultAddresses ? [{value: "", index: street.lastDefaultAddressIndex, isVisited: false}] : street.defaultAddresses
+        let newDefaultAddresses = shouldRemoveDefaultAddresses ? [{value: "", index: street.lastDefaultAddressIndex, isVisited: false, isCanceled: false}] : street.defaultAddresses
         let newLastDefaultAddressIndex = shouldRemoveDefaultAddresses ? street.lastDefaultAddressIndex + 1 : street.lastDefaultAddressIndex
         return {
           ...street,
@@ -46,7 +47,7 @@ function App() {
         };
       } else if (appMode == 'streets') {
         let shouldRemoveAddresses = street.isEnabled
-        let newAddresses = shouldRemoveAddresses ? [{value: "", index: street.lastAddressIndex, isVisited: false}] : street.addresses
+        let newAddresses = shouldRemoveAddresses ? [{value: "", index: street.lastAddressIndex, isVisited: false, isCanceled: false}] : street.addresses
         let newLastAddressIndex = shouldRemoveAddresses ? street.lastAddressIndex + 1 : street.lastAddressIndex
         return {
           ...street,
@@ -162,7 +163,7 @@ function App() {
               return address.index != addressIndex;
             })          
           } else if (newAddresses.slice(-1)[0].value != '') {
-              newAddresses.push({value: '', index: targetLastAddressIndex, isVisited: false})
+              newAddresses.push({value: '', index: targetLastAddressIndex, isVisited: false, isCanceled: false})
             shouldIncrementIndex = true;
           }
           console.log(newAddresses);
@@ -179,7 +180,7 @@ function App() {
   }
 
   const streetsList = streets.filter((street) => {
-    if (appMode == 'addresses' || appMode == 'checklist') {
+    if (appMode == 'addresses' || appMode == 'checklist' || appMode == 'add canceled') {
       return street.isEnabled;
     } else {
       return true;
@@ -189,7 +190,7 @@ function App() {
       'list_item',
       {
         'grey_bg': street.index % 2 == 0,
-        'marked': street.isVisited && appMode == 'checklist'
+        'marked': street.isVisited && (appMode == 'checklist' || appMode == 'add canceled')
       }
     );
 
@@ -224,7 +225,7 @@ function App() {
     );
     let addressesType = appMode == 'default streets' ? street.defaultAddresses : street.addresses
     let addressesList = addressesType.filter((address) => {
-      if (appMode == 'checklist') {
+      if (appMode == 'checklist' || appMode == 'add canceled') {
         return address.value != '';
       } else {
         return true;
@@ -242,7 +243,7 @@ function App() {
           />
         </div>
         )
-      } else if (appMode == 'checklist') {
+      } else if (appMode == 'checklist' || appMode == 'add canceled') {
         let addressDisplayClasses = classNames(
           'address',
           {'marked': address.isVisited}
@@ -254,7 +255,7 @@ function App() {
         )
       }
     });
-    let defaultAddressesList = appMode == 'addresses' || appMode == 'checklist' ? street.defaultAddresses.filter((address) => {
+    let defaultAddressesList = appMode == 'addresses' || appMode == 'checklist' || appMode == 'add canceled' ? street.defaultAddresses.filter((address) => {
       return address.value != '';
     }).map(address => {
       let addressDisplayClasses = classNames(
@@ -307,16 +308,16 @@ function App() {
           id="sidebar"
           className={isSidebarOpen ? "open" : ""}
         >
-          <div id="action_buttons">
+          <div id="mode_buttons">
             <div className="button_wrapper">
               <div className="button_container">
-              <button onClick={() => changeAppMode('view')} className={appMode == 'view' ? "active" : ""}>
-
-                  <FontAwesomeIcon icon={faEye} />
+              <button onClick={() => changeAppMode('add canceled')} className={"canceled_button " + (appMode == 'add canceled' ? "active" : "")}>
+                  <FontAwesomeIcon icon={faPlus} id="plus_icon"/>
+                  <FontAwesomeIcon icon={faExclamation} />
                 </button>
               </div>
               <div className="button_desc">
-                Режим перегляду
+                Режим позначенння скасованих адрес
               </div>
             </div>
             <div className="button_wrapper">

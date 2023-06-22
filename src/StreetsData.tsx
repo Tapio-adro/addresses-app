@@ -60,12 +60,13 @@ for (const [index, street] of streets.entries()) {
     name: street,
     index: index,
     isVisited: false,
+    isCanceled: false,
     isEnabled: isEnabledByDefault,
     isEnabledByDefault: isEnabledByDefault,
     lastAddressIndex: 1,
     lastDefaultAddressIndex: 1,
-    addresses: [{value: '', index: 0, isVisited: false}],
-    defaultAddresses: [{value: '', index: 0, isVisited: false}]
+    addresses: [{value: '', index: 0, isVisited: false, isCanceled: false}],
+    defaultAddresses: [{value: '', index: 0, isVisited: false, isCanceled: false}]
   }
   streetsData.push(streetObject);
 }
