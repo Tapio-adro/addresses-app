@@ -55,8 +55,25 @@ function App() {
           lastAddressIndex: newLastAddressIndex
         };      
       } else if (appMode == 'checklist') {
+        let isStreetVisited = street.isVisited;
+        // now if street is marked visited the same is needed to be applied to every its address
+        // and if it is unmarked visited all its adresses also should be marked accordingly
+        let newAddresses = street.addresses.map((address) => {
+          return {
+            ...address,
+            isVisited: !isStreetVisited
+          }
+        });
+        let newDefaultAddresses = street.defaultAddresses.map((address) => {
+          return {
+            ...address,
+            isVisited: !isStreetVisited
+          }
+        });
         return {
           ...street,
+          addresses: newAddresses,
+          defaultAddresses: newDefaultAddresses,
           isVisited: !street.isVisited
         };
       }
@@ -75,6 +92,22 @@ function App() {
         let address = targetAddresses[key];
         if (address.index == addressIndex) {
           address.isVisited = !address.isVisited;
+          
+          let wasAddressUnchecked = !address.isVisited;
+          if (wasAddressUnchecked) {
+            // if address was unchecked then also try to uncheck the whole street
+            street.isVisited = false;
+          } else {
+            // check if all addresses of the street are visited and if so make it also visited
+            let areAddressesVisited = street.addresses.every((address) => {
+              return address.value == "" || address.isVisited;
+            })
+            let areDefaultAddressesVisited = street.defaultAddresses.every((address) => {
+              return address.value == "" || address.isVisited;
+            })
+            let areAllAdressesVisited = areAddressesVisited && areDefaultAddressesVisited;
+            street.isVisited = areAllAdressesVisited;
+          }
           break;
         }
       }
