@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import classNames from 'classnames';
-import initialStreets from './StreetsData.tsx';
+import initialStreets from './assets/data/StreetsData.tsx';
 import Modal from './components/Modal.tsx';
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'

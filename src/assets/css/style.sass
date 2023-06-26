@@ -276,7 +276,6 @@ main
 .modal_content
   position: absolute
   width: 200px
-  height: 200px
   background-color: #fff
   border-radius: 10px
   display: grid
@@ -296,6 +295,14 @@ main
   .middle
     border-right-width: 0
     border-left-width: 0
+    display: flex
+    flex-direction: column
+    justify-content: center
+    padding: 10px
+    div
+      background-color: $midlightgrey
+      padding: 5px
+      margin: 4px
   .bottom
     display: flex
     align-items: center

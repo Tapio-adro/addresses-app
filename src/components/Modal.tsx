@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import reasons from '../assets/data/ReasonsData';
 
 export default function Modal({isOpen, onOpenChange}: {isOpen: boolean, onOpenChange: Function}) {
   
@@ -20,6 +21,11 @@ export default function Modal({isOpen, onOpenChange}: {isOpen: boolean, onOpenCh
       'open': isOpen
     }
   )
+
+  const reasonsList = reasons.map((reason) => {
+    return <div>{reason}</div>
+  });
+
   return (
     <>
     <div className={modalOverlayClasses} onClick={() => onOpenChange()}>
@@ -30,7 +36,7 @@ export default function Modal({isOpen, onOpenChange}: {isOpen: boolean, onOpenCh
           street 9b
         </div>
         <div className="middle">
-
+          {reasonsList}
         </div>
         <div className="bottom">
           <div className="accept">
