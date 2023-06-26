@@ -60,15 +60,19 @@ function App() {
         // now if street is marked visited the same is needed to be applied to every its address
         // and if it is unmarked visited all its adresses also should be marked accordingly
         let newAddresses = street.addresses.map((address) => {
+          let shouldChangeVisitedStatus = address.value != '';
+          console.log(shouldChangeVisitedStatus);
           return {
             ...address,
-            isVisited: !isStreetVisited
+            isVisited: shouldChangeVisitedStatus ? !isStreetVisited : false
           }
         });
         let newDefaultAddresses = street.defaultAddresses.map((address) => {
+          let shouldChangeVisitedStatus = address.value != '';
+          console.log(shouldChangeVisitedStatus);
           return {
             ...address,
-            isVisited: !isStreetVisited
+            isVisited: shouldChangeVisitedStatus ? !isStreetVisited : false
           }
         });
         return {
@@ -150,14 +154,12 @@ function App() {
       let targetLastAddressIndexKey = (appMode == 'default streets' ? 'lastDefaultAddressIndex' : 'lastAddressIndex') as keyof typeof street
       let targetLastAddressIndex: number = street[targetLastAddressIndexKey] as number;
 
-      console.log(targetAddressesKey);
 
       for (let key in targetAddresses) {
         let address = targetAddresses[key];
         if (address.index == addressIndex) {
           let newAddresses = targetAddresses.slice();
           let shouldIncrementIndex = false;
-          console.log(newAddresses);
           if (value == '' && newAddresses.length != 1) {
             newAddresses = newAddresses.filter((address) => {
               return address.index != addressIndex;
@@ -166,7 +168,6 @@ function App() {
               newAddresses.push({value: '', index: targetLastAddressIndex, isVisited: false, isCanceled: false})
             shouldIncrementIndex = true;
           }
-          console.log(newAddresses);
           return {
             ...street,
             [targetAddressesKey]: newAddresses,
