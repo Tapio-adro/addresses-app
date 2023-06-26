@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import classNames from 'classnames';
 import initialStreets from './StreetsData.tsx';
+import Modal from './components/Modal.tsx';
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 import './assets/css/style.css'
@@ -19,6 +20,7 @@ import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
+  const [isAddCanceledModalOpen, setIsAddCanceledModalOpen] = useState<boolean>(true)
   const [appMode, setAppMode] = useState<string>('default streets')
   const [streets, setStreets] = useState<StreetObject[]>(initialStreets)
 
@@ -61,7 +63,6 @@ function App() {
         // and if it is unmarked visited all its adresses also should be marked accordingly
         let newAddresses = street.addresses.map((address) => {
           let shouldChangeVisitedStatus = address.value != '';
-          console.log(shouldChangeVisitedStatus);
           return {
             ...address,
             isVisited: shouldChangeVisitedStatus ? !isStreetVisited : false
@@ -69,7 +70,6 @@ function App() {
         });
         let newDefaultAddresses = street.defaultAddresses.map((address) => {
           let shouldChangeVisitedStatus = address.value != '';
-          console.log(shouldChangeVisitedStatus);
           return {
             ...address,
             isVisited: shouldChangeVisitedStatus ? !isStreetVisited : false
@@ -88,7 +88,7 @@ function App() {
   }
   function handleAddressClick (streetIndex: number, IsDefaultAddress: boolean, addressIndex: number) {
     const nextStreets: StreetObject[] = streets.map(street => {
-      if (street.index != streetIndex || appMode != 'checklist') {
+      if (street.index != streetIndex || (appMode != 'checklist' && appMode != 'add canceled')) {
         return street;
       }
       let targetAddressesKey = IsDefaultAddress ? 'defaultAddresses' : 'addresses'  as keyof typeof street
@@ -96,31 +96,37 @@ function App() {
       for (let key in targetAddresses) {
         let address = targetAddresses[key];
         if (address.index == addressIndex) {
-          address.isVisited = !address.isVisited;
+          if (appMode == 'checklist') {
+            address.isVisited = !address.isVisited;
           
-          let wasAddressUnchecked = !address.isVisited;
-          if (wasAddressUnchecked) {
-            // if address was unchecked then also try to uncheck the whole street
-            street.isVisited = false;
-          } else {
-            // check if all addresses of the street are visited and if so make it also visited
-            let areAddressesVisited = street.addresses.every((address) => {
-              return address.value == "" || address.isVisited;
-            })
-            let areDefaultAddressesVisited = street.defaultAddresses.every((address) => {
-              return address.value == "" || address.isVisited;
-            })
-            let areAllAdressesVisited = areAddressesVisited && areDefaultAddressesVisited;
-            street.isVisited = areAllAdressesVisited;
+            let wasAddressUnchecked = !address.isVisited;
+            if (wasAddressUnchecked) {
+              // if address was unchecked then also try to uncheck the whole street
+              street.isVisited = false;
+            } else {
+              // check if all addresses of the street are visited and if so make it also visited
+              let areAddressesVisited = street.addresses.every((address) => {
+                return address.value == "" || address.isVisited;
+              })
+              let areDefaultAddressesVisited = street.defaultAddresses.every((address) => {
+                return address.value == "" || address.isVisited;
+              })
+              let areAllAdressesVisited = areAddressesVisited && areDefaultAddressesVisited;
+              street.isVisited = areAllAdressesVisited;
+            }
+            break;          
+          } else if (appMode == 'add canceled') {
+            console.log("here");
+            setIsAddCanceledModalOpen(!isAddCanceledModalOpen)
           }
-          break;
+
         }
       }
       return street;
     });
     setStreets(nextStreets);
   }
-  function handleInputFocus (streetIndex: number, addressIndex: number, event: React.ChangeEvent<HTMLInputElement>) {
+  function handleInputFocus (streetIndex: number, addressIndex: number) {
     const nextStreets: StreetObject[] = streets.map(street => {
       if (street.index != streetIndex) {
         return street;
@@ -263,7 +269,7 @@ function App() {
             className={streetAddressClasses}
             value={address.value} 
             onChange={(event) => handleInputChange(street.index, address.index, event)}
-            onFocus={(event) => handleInputFocus(street.index, address.index, event)}
+            onFocus={() => handleInputFocus(street.index, address.index)}
             onBlur={(event) => handleInputBlur(street.index, address.index, event)}
           />
         </div>
@@ -319,6 +325,10 @@ function App() {
   return (
     <>
       <main>
+        <Modal
+          isOpen={isAddCanceledModalOpen}
+          onOpenChange={() => {setIsAddCanceledModalOpen(!isAddCanceledModalOpen)}}
+        ></Modal>
         <div 
           id="dark_background" 
           className={isSidebarOpen ? "shown" : ""}

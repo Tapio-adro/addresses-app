@@ -42,10 +42,10 @@ main
   margin-bottom: 1px
   &.grey_bg
   &.grey_bg.marked
-    background: transparentize($lightgrey, 0.5)
   &.marked
     color: $midgrey
     text-decoration: line-through
+    background: transparentize($lightgrey, 0.5)
 #list .list_indicator
   display: block
   width: 5px
@@ -241,9 +241,61 @@ main
     opacity: 1
     pointer-events: all
     backdrop-filter: blur(2px)
-    
 
-
+.modal_overlay
+  position: fixed
+  top: 0
+  left: 0
+  width: 100vw
+  height: 100vh
+  z-index: 3
+  transition: 0.5s
+  pointer-events: none
+  display: flex
+  justify-content: center
+  align-items: center
+  opacity: 0
+  &.open
+    opacity: 1
+    pointer-events: all
+    background-color: transparentize(#000, 0.5)
+.modal_content
+  position: absolute
+  width: 200px
+  // height: 200px
+  background-color: #fff
+  border-radius: 10px
+  display: grid
+  grid-template-rows: 30px auto 30px
+  font-family: sans-serif
+  .top
+    display: flex
+    justify-content: center
+    align-items: center
+    background-image: linear-gradient(transparentize($blue, 0.3), $blue)
+    color: white
+    border-top-left-radius: 10px
+    border-top-right-radius: 10px
+  .middle
+    border-right-width: 0
+    border-left-width: 0
+  .bottom
+    display: flex
+    align-items: center
+    div
+      height: 100%
+      width: 100%
+      display: flex
+      align-items: center
+      justify-content: center
+    .accept
+      border-bottom-left-radius: 10px
+      background-image: linear-gradient(transparentize($green, 0.3), $green)
+      color: white
+    .cancel
+      border-bottom-right-radius: 10px
+      background-image: linear-gradient(transparentize($red, 0.3), $red)
+      color: white
 
 
 
