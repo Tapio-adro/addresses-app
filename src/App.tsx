@@ -120,6 +120,32 @@ function App() {
     });
     setStreets(nextStreets);
   }
+  function handleInputFocus (streetIndex: number, addressIndex: number, event: React.ChangeEvent<HTMLInputElement>) {
+    const nextStreets: StreetObject[] = streets.map(street => {
+      if (street.index != streetIndex) {
+        return street;
+      }
+      let targetAddressesKey = (appMode == 'default streets' ? 'defaultAddresses' : 'addresses') as keyof typeof street
+      let targetAddresses: AddressObject[] = street[targetAddressesKey] as AddressObject[];
+      let targetLastAddressIndexKey = (appMode == 'default streets' ? 'lastDefaultAddressIndex' : 'lastAddressIndex') as keyof typeof street
+      let targetLastAddressIndex: number = street[targetLastAddressIndexKey] as number;
+
+      for (let key in targetAddresses) {
+        let address = targetAddresses[key];
+        if (address.index == addressIndex && targetAddresses[targetAddresses.length - 1].index == address.index) {
+          let newAddresses = targetAddresses.slice();
+          newAddresses.push({value: '', index: targetLastAddressIndex, isVisited: false, isCanceled: false})
+          return {
+            ...street,
+            [targetAddressesKey]: newAddresses,
+            [targetLastAddressIndexKey]: targetLastAddressIndex + 1
+          };
+        }
+      }
+      return street;
+    });
+    setStreets(nextStreets);
+  }
   function handleInputChange (streetIndex: number, addressIndex: number, event: React.ChangeEvent<HTMLInputElement>) {
     const nextStreets: StreetObject[] = streets.map(street => {
       if (street.index != streetIndex) {
@@ -163,10 +189,7 @@ function App() {
           if (value == '' && newAddresses.length != 1) {
             newAddresses = newAddresses.filter((address) => {
               return address.index != addressIndex;
-            })          
-          } else if (newAddresses.slice(-1)[0].value != '') {
-              newAddresses.push({value: '', index: targetLastAddressIndex, isVisited: false, isCanceled: false})
-            shouldIncrementIndex = true;
+            })
           }
           return {
             ...street,
@@ -240,6 +263,7 @@ function App() {
             className={streetAddressClasses}
             value={address.value} 
             onChange={(event) => handleInputChange(street.index, address.index, event)}
+            onFocus={(event) => handleInputFocus(street.index, address.index, event)}
             onBlur={(event) => handleInputBlur(street.index, address.index, event)}
           />
         </div>
