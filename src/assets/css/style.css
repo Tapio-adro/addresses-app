@@ -342,6 +342,9 @@ main {
   padding: 5px;
   margin: 4px;
 }
+.modal_content .middle div.is_checked {
+  background-color: rgba(251, 106, 106, 0.3);
+}
 .modal_content .bottom {
   display: flex;
   align-items: center;
@@ -357,6 +360,10 @@ main {
   border-bottom-left-radius: 10px;
   background-image: linear-gradient(rgba(4, 170, 109, 0.7), #04AA6D);
   color: white;
+}
+.modal_content .bottom .accept.inactive {
+  background-image: linear-gradient(rgba(191, 191, 191, 0.7), #bfbfbf);
+  pointer-events: none;
 }
 .modal_content .bottom .cancel {
   border-bottom-right-radius: 10px;

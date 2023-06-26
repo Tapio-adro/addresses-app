@@ -1,3 +1,5 @@
+import { ReasonObject } from "../shared/lib/types";
+
 let reasons: string[] = [
   'Odbiorca nieobecny',
   'Umówiono późniejszy termin doręczenia',
@@ -10,4 +12,8 @@ let reasons: string[] = [
   'Brak możliwości weryfikacji odbioru',
 ];
 
-export default reasons;
+let reasonsData: ReasonObject[] = reasons.map((reason) => {
+  return {value: reason, isChecked: false};
+});
+
+export default reasonsData;

@@ -1,3 +1,7 @@
+export type ReasonObject = {
+  value: string;
+  isChecked: boolean;
+}
 export type AddressObject = {
   value: string;
   index: number;

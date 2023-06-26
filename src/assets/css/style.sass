@@ -303,6 +303,8 @@ main
       background-color: $midlightgrey
       padding: 5px
       margin: 4px
+    div.is_checked
+      background-color: transparentize($red, 0.7)
   .bottom
     display: flex
     align-items: center
@@ -316,6 +318,9 @@ main
       border-bottom-left-radius: 10px
       background-image: linear-gradient(transparentize($green, 0.3), $green)
       color: white
+    .accept.inactive
+      background-image: linear-gradient(transparentize($grey, 0.3), $grey)
+      pointer-events: none
     .cancel
       border-bottom-right-radius: 10px
       background-image: linear-gradient(transparentize($red, 0.3), $red)
