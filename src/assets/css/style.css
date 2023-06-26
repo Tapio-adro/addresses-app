@@ -271,12 +271,12 @@ main {
 }
 
 .modal_overlay {
-  position: fixed;
+  z-index: 3;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 3;
   transition: 0.5s;
   pointer-events: none;
   display: flex;
@@ -286,18 +286,40 @@ main {
 }
 .modal_overlay.open {
   opacity: 1;
-  pointer-events: all;
+  pointer-events: auto;
   background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal_wrapper {
+  z-index: 4;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+}
+.modal_wrapper.open {
+  opacity: 1;
 }
 
 .modal_content {
   position: absolute;
   width: 200px;
+  height: 200px;
   background-color: #fff;
   border-radius: 10px;
   display: grid;
   grid-template-rows: 30px auto 30px;
   font-family: sans-serif;
+  pointer-events: none;
+}
+.modal_content.open {
+  pointer-events: auto;
 }
 .modal_content .top {
   display: flex;

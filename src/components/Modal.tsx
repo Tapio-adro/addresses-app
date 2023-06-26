@@ -8,9 +8,24 @@ export default function Modal({isOpen, onOpenChange}: {isOpen: boolean, onOpenCh
       'open': isOpen
     }
   )
+  let modalWrapperClasses = classNames(
+    'modal_wrapper',
+    {
+      'open': isOpen
+    }
+  )
+  let modalContentClasses = classNames(
+    'modal_content',
+    {
+      'open': isOpen
+    }
+  )
   return (
+    <>
     <div className={modalOverlayClasses} onClick={() => onOpenChange()}>
-      <div className="modal_content">
+    </div>
+    <div className={modalWrapperClasses}>
+      <div className={modalContentClasses}>
         <div className="top">
           street 9b
         </div>
@@ -21,11 +36,14 @@ export default function Modal({isOpen, onOpenChange}: {isOpen: boolean, onOpenCh
           <div className="accept">
             Позначити
           </div>
-          <div className="cancel">
+          <div className="cancel"
+           onClick={() => onOpenChange()}
+          >
             Скасувати
           </div>
         </div>
       </div>
     </div>
+    </>
   )
 }
