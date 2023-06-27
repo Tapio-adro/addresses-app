@@ -111,7 +111,6 @@ main {
   border: 1px solid #04AA6D;
   border-radius: 3px;
   transition: 0.25s;
-  font-family: sans-serif;
   color: #666;
   color: #04AA6D;
 }
@@ -174,11 +173,11 @@ main {
 #mode_buttons .button_desc {
   font-size: 10px;
   width: 140px;
-  font-family: sans-serif;
   background-color: #f3f3f3;
   padding: 5px;
   border-radius: 5px;
   margin: auto 0;
+  text-align: center;
 }
 #mode_buttons #reset_button_desc {
   width: 100px;
@@ -328,7 +327,6 @@ main {
   border-radius: 10px;
   display: grid;
   grid-template-rows: 30px auto 30px;
-  font-family: sans-serif;
   pointer-events: none;
 }
 .modal_content.open {
