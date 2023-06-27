@@ -33,8 +33,13 @@ main {
   margin-top: 1px;
   margin-bottom: 1px;
 }
-#list .list_item.marked {
+#list .list_item.visited {
   color: #999999;
+  text-decoration: line-through;
+  background: rgba(243, 243, 243, 0.5);
+}
+#list .list_item.canceled {
+  color: #f28c8c;
   text-decoration: line-through;
   background: rgba(243, 243, 243, 0.5);
 }
@@ -114,10 +119,15 @@ main {
   color: #06bcf9;
   border-color: #06bcf9;
 }
-#list .address.marked {
+#list .address.visited {
   text-decoration: line-through;
   color: #999999;
   border-color: #bfbfbf;
+}
+#list .address.canceled {
+  text-decoration: line-through;
+  color: #f28c8c;
+  border-color: #f28c8c;
 }
 
 #sidebar {
@@ -300,10 +310,14 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 0;
   pointer-events: none;
+  transition: 0.5s;
+  transition-timing-function: ease-in;
+  transform: translateY(-30vh);
+  opacity: 0;
 }
 .modal_wrapper.open {
+  transform: translateY(0);
   opacity: 1;
 }
 

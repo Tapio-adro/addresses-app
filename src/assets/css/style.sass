@@ -3,6 +3,7 @@ $green: #04AA6D
 $lightblue: #6ad7fb
 $blue: #06bcf9
 $red: #fb6a6a
+$palered: #f28c8c
 $lightgrey: #f3f3f3
 $midlightgrey: #ddd
 $grey: #bfbfbf
@@ -42,8 +43,12 @@ main
   margin-bottom: 1px
   &.grey_bg
   &.grey_bg.marked
-  &.marked
+  &.visited
     color: $midgrey
+    text-decoration: line-through
+    background: transparentize($lightgrey, 0.5)
+  &.canceled
+    color: $palered
     text-decoration: line-through
     background: transparentize($lightgrey, 0.5)
 #list .list_indicator
@@ -107,10 +112,14 @@ main
   &.default
     color: $blue
     border-color: $blue
-  &.marked
+  &.visited
     text-decoration: line-through
     color: $midgrey
     border-color: $grey
+  &.canceled
+    text-decoration: line-through
+    color: $palered
+    border-color: $palered
 
 #sidebar
   position: fixed
@@ -269,9 +278,13 @@ main
   display: flex
   justify-content: center
   align-items: center
-  opacity: 0
   pointer-events: none
+  transition: 0.5s
+  transition-timing-function: ease-in
+  transform: translateY(-30vh)
+  opacity: 0
   &.open
+    transform: translateY(0)
     opacity: 1
 .modal_content
   position: absolute

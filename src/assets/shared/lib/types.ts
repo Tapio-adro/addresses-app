@@ -20,3 +20,10 @@ export type StreetObject = {
   addresses: AddressObject[];
   defaultAddresses: AddressObject[];
 }
+export type StreetAndNumber = {
+  street: string;
+  number: string;
+  streetIndex: number;
+  numberIndex: number;
+  isDefaultAddress: boolean;
+}

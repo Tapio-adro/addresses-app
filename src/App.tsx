@@ -6,7 +6,7 @@ import Modal from './components/Modal.tsx';
 // import viteLogo from '/vite.svg'
 import './assets/css/style.css'
 
-import { StreetObject, AddressObject } from './assets/shared/lib/types'
+import { StreetObject, AddressObject, StreetAndNumber } from './assets/shared/lib/types'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -16,13 +16,19 @@ import { faSquareCheck } from "@fortawesome/free-solid-svg-icons";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
-
+function getDefaultCancelationAddress(): StreetAndNumber {
+  return JSON.parse(JSON.stringify(
+    {street: '', number: '', streetIndex: -1, numberIndex: -1, isDefaultAddress: false}
+  ))
+}
 
 function App() {
+
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
   const [isAddCanceledModalOpen, setIsAddCanceledModalOpen] = useState<boolean>(true)
   const [appMode, setAppMode] = useState<string>('default streets')
   const [streets, setStreets] = useState<StreetObject[]>(initialStreets)
+  const [currentCancelationAddress, setCurrentCancelationAddress] = useState<StreetAndNumber>(getDefaultCancelationAddress())
 
   function changeAppMode (mode: string) {
     setAppMode(mode)
@@ -60,16 +66,16 @@ function App() {
       } else if (appMode == 'checklist') {
         let isStreetVisited = street.isVisited;
         // now if street is marked visited the same is needed to be applied to every its address
-        // and if it is unmarked visited all its adresses also should be marked accordingly
+        // and if it is unmarked visited all its addresses also should be marked accordingly
         let newAddresses = street.addresses.map((address) => {
-          let shouldChangeVisitedStatus = address.value != '';
+          let shouldChangeVisitedStatus = address.value != '' && !address.isCanceled;
           return {
             ...address,
             isVisited: shouldChangeVisitedStatus ? !isStreetVisited : false
           }
         });
         let newDefaultAddresses = street.defaultAddresses.map((address) => {
-          let shouldChangeVisitedStatus = address.value != '';
+          let shouldChangeVisitedStatus = address.value != '' && !address.isCanceled;
           return {
             ...address,
             isVisited: shouldChangeVisitedStatus ? !isStreetVisited : false
@@ -86,38 +92,37 @@ function App() {
     });
     setStreets(nextStreets);
   }
-  function handleAddressClick (streetIndex: number, IsDefaultAddress: boolean, addressIndex: number) {
+  function handleAddressClick (streetIndex: number, isDefaultAddress: boolean, addressIndex: number) {
     const nextStreets: StreetObject[] = streets.map(street => {
       if (street.index != streetIndex || (appMode != 'checklist' && appMode != 'add canceled')) {
         return street;
       }
-      let targetAddressesKey = IsDefaultAddress ? 'defaultAddresses' : 'addresses'  as keyof typeof street
+      let targetAddressesKey = isDefaultAddress ? 'defaultAddresses' : 'addresses'  as keyof typeof street
       let targetAddresses: AddressObject[] = street[targetAddressesKey] as AddressObject[];
       for (let key in targetAddresses) {
         let address = targetAddresses[key];
-        if (address.index == addressIndex) {
+        if (address.index == addressIndex && !address.isCanceled) {
           if (appMode == 'checklist') {
             address.isVisited = !address.isVisited;
           
             let wasAddressUnchecked = !address.isVisited;
             if (wasAddressUnchecked) {
-              // if address was unchecked then also try to uncheck the whole street
+              // if address was unchecked then also uncheck the whole street
               street.isVisited = false;
             } else {
-              // check if all addresses of the street are visited and if so make it also visited
-              let areAddressesVisited = street.addresses.every((address) => {
-                return address.value == "" || address.isVisited;
-              })
-              let areDefaultAddressesVisited = street.defaultAddresses.every((address) => {
-                return address.value == "" || address.isVisited;
-              })
-              let areAllAdressesVisited = areAddressesVisited && areDefaultAddressesVisited;
-              street.isVisited = areAllAdressesVisited;
+              checkStreetState(streetIndex, isDefaultAddress, addressIndex);
             }
             break;          
-          } else if (appMode == 'add canceled') {
-            console.log("here");
+          } else if (appMode == 'add canceled' && !address.isVisited) {
+            setCurrentCancelationAddress({
+              street: street.name,
+              number: address.value,
+              streetIndex: streetIndex,
+              numberIndex: addressIndex,
+              isDefaultAddress: isDefaultAddress
+            });
             setIsAddCanceledModalOpen(!isAddCanceledModalOpen)
+            break;          
           }
 
         }
@@ -208,6 +213,80 @@ function App() {
     });
     setStreets(nextStreets);
   }
+  function cancelCurrentAddress () {
+    let streetIndex = currentCancelationAddress.streetIndex;
+    let addressIndex = currentCancelationAddress.numberIndex;
+    let isDefaultAddress = currentCancelationAddress.isDefaultAddress;
+    // console.log(isDefaultAddress);
+    const nextStreets: StreetObject[] = streets.map(street => {
+      if (street.index != streetIndex || (appMode != 'checklist' && appMode != 'add canceled')) {
+        return street;
+      }
+      let targetAddressesKey = isDefaultAddress ? 'defaultAddresses' : 'addresses'  as keyof typeof street
+      let targetAddresses: AddressObject[] = street[targetAddressesKey] as AddressObject[];
+      for (let key in targetAddresses) {
+        let address = targetAddresses[key];
+        if (address.index == addressIndex) {
+          address.isCanceled = true;
+        }
+      }
+      return street;
+    });
+    setStreets(nextStreets);
+    checkStreetState(streetIndex, isDefaultAddress, addressIndex);
+  }
+  function checkStreetState (streetIndex: number, isDefaultAddress: boolean, addressIndex: number) {
+    const nextStreets: StreetObject[] = streets.map(street => {
+      if (street.index != streetIndex) {
+        return street;
+      }
+      let targetAddressesKey = isDefaultAddress ? 'defaultAddresses' : 'addresses'  as keyof typeof street
+      let targetAddresses: AddressObject[] = street[targetAddressesKey] as AddressObject[];
+      for (let key in targetAddresses) {
+        let address = targetAddresses[key];
+        if (address.index == addressIndex) {
+          // first check whether addresses are visited
+          let areAddressesVisited = street.addresses.every((address) => {
+            return address.value == "" || address.isVisited;
+          })
+          let areDefaultAddressesVisited = street.defaultAddresses.every((address) => {
+            return address.value == "" || address.isVisited;
+          })
+          let areAllAddressesVisited = areAddressesVisited && areDefaultAddressesVisited;
+          // then whether they are canceled
+          let areAddressesCanceled = street.addresses.every((address) => {
+            return address.value == "" || address.isCanceled;
+          })
+          let areDefaultAddressesCanceled = street.defaultAddresses.every((address) => {
+            return address.value == "" || address.isCanceled;
+          })
+          let areAllAddressesCanceled = areAddressesCanceled && areDefaultAddressesCanceled;
+          // also check if every address is or visited or canceled
+          let areAddressesCanceledOrVisited = street.addresses.every((address) => {
+            return address.value == "" || address.isCanceled || address.isVisited;
+          })
+          let areDefaultAddressesCanceledOrVisited = street.defaultAddresses.every((address) => {
+            return address.value == "" || address.isCanceled || address.isVisited;
+          })
+          let areAllAddressesCanceledOrVisited = areAddressesCanceledOrVisited && areDefaultAddressesCanceledOrVisited;
+          if (areAllAddressesCanceled) {
+            street.isVisited = false;
+            street.isCanceled = true;
+          } else if (areAllAddressesVisited || areAllAddressesCanceledOrVisited) {
+            street.isVisited = true;
+            street.isCanceled = false;
+          } else {
+            street.isVisited = false;
+            street.isCanceled = false;          
+          }
+          break;
+        }
+      }
+      return street;
+    });
+    setStreets(nextStreets);
+
+  }
 
   const streetsList = streets.filter((street) => {
     if (appMode == 'addresses' || appMode == 'checklist' || appMode == 'add canceled') {
@@ -220,7 +299,8 @@ function App() {
       'list_item',
       {
         'grey_bg': street.index % 2 == 0,
-        'marked': street.isVisited && (appMode == 'checklist' || appMode == 'add canceled')
+        'visited': street.isVisited && (appMode == 'checklist' || appMode == 'add canceled'),
+        'canceled': street.isCanceled && (appMode == 'checklist' || appMode == 'add canceled')
       }
     );
 
@@ -277,7 +357,10 @@ function App() {
       } else if (appMode == 'checklist' || appMode == 'add canceled') {
         let addressDisplayClasses = classNames(
           'address',
-          {'marked': address.isVisited}
+          {
+            'visited': address.isVisited,
+            'canceled': address.isCanceled
+          }
         )
         return (
           <div className="address_container" key={address.index}>
@@ -292,7 +375,10 @@ function App() {
       let addressDisplayClasses = classNames(
         'address',
         'default',
-        {'marked': address.isVisited}
+        {
+          'visited': address.isVisited,
+          'canceled': address.isCanceled
+        }
       )
       return (
         <div className="address_container" key={address.index}>
@@ -327,7 +413,9 @@ function App() {
       <main>
         <Modal
           isOpen={isAddCanceledModalOpen}
-          onOpenChange={() => {setIsAddCanceledModalOpen(!isAddCanceledModalOpen)}}
+          currentAddress={currentCancelationAddress}
+          onOpenChange={() => setIsAddCanceledModalOpen(!isAddCanceledModalOpen)}
+          onAddressCanceled={() => cancelCurrentAddress()}
         ></Modal>
         <div 
           id="dark_background" 
