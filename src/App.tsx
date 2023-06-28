@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import classNames from 'classnames';
 import initialStreets from './assets/data/StreetsData.tsx';
 import Modal from './components/Modal.tsx';
@@ -35,12 +35,14 @@ function App() {
   const [reasonsData, setReasonsData] = useState<ReasonWithAddressesObject[]>(canceledAddressesData);
   const [canceledAmount, setCanceledAmount] = useState<number>(0);
 
+  useEffect(() => {
+    recalculateCanceledAmount();
+  }, [reasonsData])
+
   function recalculateCanceledAmount() {
     let newCanceledAmount = 0;
     reasonsData.forEach(reason => {
       newCanceledAmount += reason.addresses.length;
-      console.log(reason.addresses);
-      console.log(reason.addresses.length);
     });
     setCanceledAmount(newCanceledAmount);
   }
@@ -275,7 +277,7 @@ function App() {
     });
     setReasonsData(newReasonsData);
     
-    recalculateCanceledAmount();
+    // recalculateCanceledAmount();
   }
   function uncancelAddress (targetReason: ReasonWithAddressesObject, targetStreetAndNumber: StreetAndNumber) {
     const nextStreets: StreetObject[] = streets.map(street => {
@@ -295,8 +297,6 @@ function App() {
     });
     setStreets(nextStreets);
 
-    console.log(targetReason);
-
     const newReasonsData = reasonsData.map((reason) => {
       if (reason.name == targetReason.name) {
         const newAddresses = reason.addresses.filter((streetAndNumber) => {
@@ -314,9 +314,6 @@ function App() {
       return reason;
     });
     setReasonsData(newReasonsData);
-    console.log(newReasonsData);
-    
-    recalculateCanceledAmount();
   }
   function checkStreetState (streetIndex: number, isDefaultAddress: boolean, addressIndex: number) {
     const nextStreets: StreetObject[] = streets.map(street => {
