@@ -2,11 +2,12 @@ import { useState } from 'react'
 import classNames from 'classnames';
 import initialStreets from './assets/data/StreetsData.tsx';
 import Modal from './components/Modal.tsx';
+import CanceledAddressesList from './components/CanceledAddressesList.tsx';
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 import './assets/css/style.css'
 
-import { StreetObject, AddressObject, StreetAndNumber } from './assets/shared/lib/types'
+import { StreetObject, AddressObject, StreetAndNumber, AppMode } from './assets/shared/lib/types'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -25,12 +26,12 @@ function getDefaultCancelationAddress(): StreetAndNumber {
 function App() {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
-  const [isAddCanceledModalOpen, setIsAddCanceledModalOpen] = useState<boolean>(true)
-  const [appMode, setAppMode] = useState<string>('default streets')
+  const [appMode, setAppMode] = useState<AppMode>('view canceled')
   const [streets, setStreets] = useState<StreetObject[]>(initialStreets)
+  const [isAddCanceledModalOpen, setIsAddCanceledModalOpen] = useState<boolean>(false)
   const [currentCancelationAddress, setCurrentCancelationAddress] = useState<StreetAndNumber>(getDefaultCancelationAddress())
 
-  function changeAppMode (mode: string) {
+  function changeAppMode (mode: AppMode) {
     setAppMode(mode)
     if (isSidebarOpen) {
       setIsSidebarOpen(false)
@@ -288,7 +289,7 @@ function App() {
 
   }
 
-  const streetsList = streets.filter((street) => {
+  const streetsList = appMode != 'view canceled' ? streets.filter((street) => {
     if (appMode == 'addresses' || appMode == 'checklist' || appMode == 'add canceled') {
       return street.isEnabled;
     } else {
@@ -406,7 +407,7 @@ function App() {
         </div>
       </div>
     )
-  });
+  }) : null;
 
   return (
     <>
@@ -422,6 +423,9 @@ function App() {
           className={isSidebarOpen ? "shown" : ""}
           onClick={() => setIsSidebarOpen(false)}
         ></div>
+        <CanceledAddressesList
+          appMode={appMode}
+        ></CanceledAddressesList>
         <div id="list"
           className={appMode == "default streets" || appMode == "streets" ? "any_streets_mode" : ""}
         >
@@ -434,7 +438,19 @@ function App() {
           <div id="mode_buttons">
             <div className="button_wrapper">
               <div className="button_container">
-              <button onClick={() => changeAppMode('add canceled')} className={"canceled_button " + (appMode == 'add canceled' ? "active" : "")}>
+                <button onClick={() => changeAppMode('view canceled')} className={"canceled_button view_canceled " + (appMode == 'view canceled' ? "active" : "")}>
+                  <FontAwesomeIcon icon={faExclamation} />
+                  <FontAwesomeIcon icon={faExclamation} />
+                  <FontAwesomeIcon icon={faExclamation} />
+                </button>
+              </div>
+              <div className="button_desc">
+                Режим перегляду скасованих адрес
+              </div>
+            </div>
+            <div className="button_wrapper">
+              <div className="button_container">
+                <button onClick={() => changeAppMode('add canceled')} className={"canceled_button " + (appMode == 'add canceled' ? "active" : "")}>
                   <FontAwesomeIcon icon={faPlus} id="plus_icon"/>
                   <FontAwesomeIcon icon={faExclamation} />
                 </button>

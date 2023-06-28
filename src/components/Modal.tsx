@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import classNames from 'classnames';
-import initialReasons from '../assets/data/ReasonsData';
+import { reasonsData } from '../assets/data/ReasonsData';
 import { ReasonObject, StreetAndNumber } from '../assets/shared/lib/types';
 
 export default function Modal({
@@ -14,7 +14,7 @@ export default function Modal({
   onOpenChange: Function;
   onAddressCanceled: Function;
 }) {
-  const [reasons, setReasons] = useState<ReasonObject[]>(initialReasons);
+  const [reasons, setReasons] = useState<ReasonObject[]>(reasonsData);
   const [currentReason, setCurrentReason] = useState<string>('');
 
   let modalOverlayClasses = classNames('modal_overlay', {

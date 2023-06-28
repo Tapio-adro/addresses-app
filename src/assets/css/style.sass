@@ -190,6 +190,8 @@ main
     #plus_icon
       font-size: 12px
       margin-right: 2px
+  .view_canceled svg
+    padding: 2px
   #reset_button
     margin-top: auto
   #defaults_button
@@ -337,5 +339,53 @@ main
       background-image: linear-gradient(transparentize($red, 0.3), $red)
       color: white
 
-
-
+.reasons_container
+  padding-left: 5px
+  section
+  section:first-child .caption
+    border-top-right-radius: 10px
+    border-top-left-radius: 10px
+  section:last-child .caption
+    border-bottom-right-radius: 10px
+    border-bottom-left-radius: 10px
+  .caption
+    margin-bottom: 2px
+    font-weight: normal
+    background-color: transparentize($palered, 0.5)
+    padding: 5px
+    display: flex
+    align-items: center
+    column-gap: 10px
+    .amount
+      display: flex
+      justify-content: center
+      align-items: center
+      border-radius: 50%
+      background-color: white
+      height: 18px
+      width: 18px
+      font-size: 12px
+      color: $textgrey
+    .text
+      margin: auto 0
+      font-size: 12px
+      height: 13.6px
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
+      // flex-grow: 1fr
+      width: 120px
+    &.open .text
+      overflow: auto
+      white-space: normal
+      height: auto
+    .chevron
+      color: $textgrey
+      font-size: 10px
+      width: 18px
+      height: 18px
+      display: flex
+      align-items: center
+    &.open .chevron
+      transform: scaleY(-1)
+  .addresses
