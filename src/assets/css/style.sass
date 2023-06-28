@@ -339,19 +339,41 @@ main
       background-image: linear-gradient(transparentize($red, 0.3), $red)
       color: white
 
-.reasons_container
+.reasons_wrapper
   padding-left: 5px
+.reasons_header
+  display: flex
+  justify-content: center
+  background-color: transparentize($palered, 0.3)
+  color: white
+  padding: 5px
+  border-radius: 10px
+  margin-bottom: 10px
+  .addresses_amount
+    background-color: #fff
+    width: 30px
+    height: 18px
+    border-radius: 9px
+    margin-right: 5px
+    display: flex
+    justify-content: center
+    align-items: center
+    color: transparentize($palered, 0.3)
+  &.hidden
+    display: none
+.reasons_container
   section
-  section:first-child .caption
+    margin-bottom: 2px
+    overflow: hidden
+  section:first-child
     border-top-right-radius: 10px
     border-top-left-radius: 10px
-  section:last-child .caption
+  section:last-child
     border-bottom-right-radius: 10px
     border-bottom-left-radius: 10px
   .caption
-    margin-bottom: 2px
     font-weight: normal
-    background-color: transparentize($palered, 0.5)
+    background-color: transparentize($palered, 0.6)
     padding: 5px
     display: flex
     align-items: center
@@ -389,3 +411,25 @@ main
     &.open .chevron
       transform: scaleY(-1)
   .addresses
+    background-color: $lightgrey
+    color: $textgrey
+    font-size: 12px
+    padding: 5px
+    // padding-left: 15px
+    display: none
+    .address
+      background-color: #fff
+      padding: 1px 3px
+      margin: 3px
+      display: flex
+      .address_name
+        flex-grow: 1
+      .address_remove
+        width: 12px
+        height: 12px
+        display: flex
+        justify-content: center
+        align-items: center
+        color: $red
+    &.open
+      display: block

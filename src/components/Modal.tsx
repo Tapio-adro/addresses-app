@@ -55,7 +55,7 @@ export default function Modal({
   }
 
   function markAddressCanceled() {
-    onAddressCanceled();
+    onAddressCanceled(currentReason);
     resetAndClose();
   }
   function resetAndClose() {

@@ -6,8 +6,9 @@ import CanceledAddressesList from './components/CanceledAddressesList.tsx';
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 import './assets/css/style.css'
+import { canceledAddressesData } from './assets/data/ReasonsData.tsx';
 
-import { StreetObject, AddressObject, StreetAndNumber, AppMode } from './assets/shared/lib/types'
+import { StreetObject, AddressObject, StreetAndNumber, AppMode, ReasonWithAddressesObject } from './assets/shared/lib/types'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -17,6 +18,8 @@ import { faSquareCheck } from "@fortawesome/free-solid-svg-icons";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import React from 'react';
+
 function getDefaultCancelationAddress(): StreetAndNumber {
   return JSON.parse(JSON.stringify(
     {street: '', number: '', streetIndex: -1, numberIndex: -1, isDefaultAddress: false}
@@ -24,12 +27,35 @@ function getDefaultCancelationAddress(): StreetAndNumber {
 }
 
 function App() {
-
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
   const [appMode, setAppMode] = useState<AppMode>('view canceled')
   const [streets, setStreets] = useState<StreetObject[]>(initialStreets)
   const [isAddCanceledModalOpen, setIsAddCanceledModalOpen] = useState<boolean>(false)
   const [currentCancelationAddress, setCurrentCancelationAddress] = useState<StreetAndNumber>(getDefaultCancelationAddress())
+  const [reasonsData, setReasonsData] = useState<ReasonWithAddressesObject[]>(canceledAddressesData);
+  const [canceledAmount, setCanceledAmount] = useState<number>(0);
+
+  function recalculateCanceledAmount() {
+    let newCanceledAmount = 0;
+    reasonsData.forEach(reason => {
+      newCanceledAmount += reason.addresses.length;
+      console.log(reason.addresses);
+      console.log(reason.addresses.length);
+    });
+    setCanceledAmount(newCanceledAmount);
+  }
+  function handleCaptionClick (name: string) {
+    const newReasonsData = reasonsData.map((reason) => {
+      if (reason.name == name) {
+        return {
+          ...reason,
+          isOpen: !reason.isOpen
+        }
+      }
+      return reason;
+    });
+    setReasonsData(newReasonsData);
+  }
 
   function changeAppMode (mode: AppMode) {
     setAppMode(mode)
@@ -214,7 +240,7 @@ function App() {
     });
     setStreets(nextStreets);
   }
-  function cancelCurrentAddress () {
+  function cancelCurrentAddress (reasonName: string) {
     let streetIndex = currentCancelationAddress.streetIndex;
     let addressIndex = currentCancelationAddress.numberIndex;
     let isDefaultAddress = currentCancelationAddress.isDefaultAddress;
@@ -235,6 +261,62 @@ function App() {
     });
     setStreets(nextStreets);
     checkStreetState(streetIndex, isDefaultAddress, addressIndex);
+
+    const newReasonsData = reasonsData.map((reason) => {
+      if (reason.name == reasonName) {
+        let newAddresses = reason.addresses
+        newAddresses.push(currentCancelationAddress);
+        return {
+          ...reason,
+          addresses: newAddresses
+        }
+      }
+      return reason;
+    });
+    setReasonsData(newReasonsData);
+    
+    recalculateCanceledAmount();
+  }
+  function uncancelAddress (targetReason: ReasonWithAddressesObject, targetStreetAndNumber: StreetAndNumber) {
+    const nextStreets: StreetObject[] = streets.map(street => {
+      if (street.index != targetStreetAndNumber.streetIndex) {
+        return street;
+      }
+      let targetAddressesKey = targetStreetAndNumber.isDefaultAddress ? 'defaultAddresses' : 'addresses'  as keyof typeof street
+      let targetAddresses: AddressObject[] = street[targetAddressesKey] as AddressObject[];
+      for (let key in targetAddresses) {
+        let address = targetAddresses[key];
+        if (address.index == targetStreetAndNumber.numberIndex) {
+          address.isCanceled = false;
+          checkStreetState(targetStreetAndNumber.streetIndex, targetStreetAndNumber.isDefaultAddress, targetStreetAndNumber.numberIndex);
+        }
+      }
+      return street;
+    });
+    setStreets(nextStreets);
+
+    console.log(targetReason);
+
+    const newReasonsData = reasonsData.map((reason) => {
+      if (reason.name == targetReason.name) {
+        const newAddresses = reason.addresses.filter((streetAndNumber) => {
+          return (
+            targetStreetAndNumber.isDefaultAddress != streetAndNumber.isDefaultAddress ||
+            targetStreetAndNumber.street != streetAndNumber.street ||
+            targetStreetAndNumber.number != streetAndNumber.number
+          );
+        })
+        return {
+          ...reason,
+          addresses: newAddresses
+        }
+      }
+      return reason;
+    });
+    setReasonsData(newReasonsData);
+    console.log(newReasonsData);
+    
+    recalculateCanceledAmount();
   }
   function checkStreetState (streetIndex: number, isDefaultAddress: boolean, addressIndex: number) {
     const nextStreets: StreetObject[] = streets.map(street => {
@@ -416,7 +498,7 @@ function App() {
           isOpen={isAddCanceledModalOpen}
           currentAddress={currentCancelationAddress}
           onOpenChange={() => setIsAddCanceledModalOpen(!isAddCanceledModalOpen)}
-          onAddressCanceled={() => cancelCurrentAddress()}
+          onAddressCanceled={(reason: string) => cancelCurrentAddress(reason)}
         ></Modal>
         <div 
           id="dark_background" 
@@ -425,6 +507,10 @@ function App() {
         ></div>
         <CanceledAddressesList
           appMode={appMode}
+          canceledAmount={canceledAmount}
+          reasonsData={reasonsData}
+          onCaptionClicked={(name: string) => handleCaptionClick(name)}
+          onAddressUncanceled={(targetReason: ReasonWithAddressesObject, targetStreetAndNumber: StreetAndNumber) => uncancelAddress(targetReason, targetStreetAndNumber)}
         ></CanceledAddressesList>
         <div id="list"
           className={appMode == "default streets" || appMode == "streets" ? "any_streets_mode" : ""}

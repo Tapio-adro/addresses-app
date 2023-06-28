@@ -12,11 +12,11 @@ let reasons: string[] = [
   'Brak możliwości weryfikacji odbioru',
 ];
 
-export const reasonsData: ReasonObject[] = reasons.map((reason) => {
+export let reasonsData: ReasonObject[] = reasons.map((reason) => {
   return {value: reason, isChecked: false};
 });
-export const canceledAddressesData: ReasonWithAddressesObject[] = reasons.map((reason) => {
-  return {name: reason, isOpen: false, addresses: [{street: 'street', number: '12', streetIndex: -1, numberIndex: -1, isDefaultAddress: false}]}
+export let canceledAddressesData: ReasonWithAddressesObject[] = reasons.map((reason) => {
+  return {name: reason, isOpen: false, addresses: []}
 });
 
 
