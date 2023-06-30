@@ -19,6 +19,7 @@ export type StreetObject = {
   lastDefaultAddressIndex: number;
   addresses: AddressObject[];
   defaultAddresses: AddressObject[];
+  isBeingReordered: boolean;
 };
 export type StreetAndNumber = {
   street: string;

@@ -15,8 +15,16 @@ let reasons: string[] = [
 export let reasonsData: ReasonObject[] = reasons.map((reason) => {
   return {value: reason, isChecked: false};
 });
-export let canceledAddressesData: ReasonWithAddressesObject[] = reasons.map((reason) => {
-  return {name: reason, isOpen: false, addresses: []}
-});
+
+let canceledAddressesData: ReasonWithAddressesObject[] = [];
+let localCanceledAddressesData = window.localStorage.getItem('canceledAddressesData');
+if (localCanceledAddressesData !== null) {
+  canceledAddressesData = JSON.parse(localCanceledAddressesData);
+} else {
+  canceledAddressesData = reasons.map((reason) => {
+    return {name: reason, isOpen: false, addresses: []}
+  });
+}
+export {canceledAddressesData};
 
 

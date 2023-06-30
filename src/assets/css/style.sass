@@ -31,6 +31,7 @@ main
 #list .list_item_container
   display: flex
   flex-wrap: wrap
+  flex-grow: 1
 #list .list_item
   display: block
   padding: 2px 4px
@@ -51,6 +52,9 @@ main
     color: $palered
     text-decoration: line-through
     background: transparentize($lightgrey, 0.5)
+  &.is_reordered
+    color: $grey
+    background: $grey
 #list .list_indicator
   display: block
   width: 5px
@@ -119,6 +123,17 @@ main
     text-decoration: line-through
     color: $palered
     border-color: $palered
+#list .reordering_arrow
+  height: 22.4px
+  display: flex
+  justify-content: center
+  align-items: center
+  width: 20px
+  font-size: 12px
+  color: $textgrey
+  margin-left: auto
+  &.green
+    color: $green
 
 #sidebar
   position: fixed

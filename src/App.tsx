@@ -11,7 +11,7 @@ import { canceledAddressesData } from './assets/data/ReasonsData.tsx';
 import { StreetObject, AddressObject, StreetAndNumber, AppMode, ReasonWithAddressesObject } from './assets/shared/lib/types'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faArrowDown, faArrowsUpDown, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faExclamation } from "@fortawesome/free-solid-svg-icons";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { faSquareCheck } from "@fortawesome/free-solid-svg-icons";
@@ -30,15 +30,38 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
   const [appMode, setAppMode] = useState<AppMode>('view canceled')
   const [streets, setStreets] = useState<StreetObject[]>(initialStreets)
+  const [streetToReorderIndex, setStreetToReorderIndex] = useState<number | null>(null)
+  const [streetToReorderIndexinArray, setStreetToReorderIndexInArray] = useState<number | null>(null)
   const [isAddCanceledModalOpen, setIsAddCanceledModalOpen] = useState<boolean>(false)
   const [currentCancelationAddress, setCurrentCancelationAddress] = useState<StreetAndNumber>(getDefaultCancelationAddress())
   const [reasonsData, setReasonsData] = useState<ReasonWithAddressesObject[]>(canceledAddressesData);
   const [canceledAmount, setCanceledAmount] = useState<number>(0);
 
   useEffect(() => {
-    recalculateCanceledAmount();
-  }, [reasonsData])
+    const localIsSidebarOpen = window.localStorage.getItem('isSidebarOpen')
+    if (localIsSidebarOpen !== null) {
+      setIsSidebarOpen(JSON.parse(localIsSidebarOpen))
+    }
+    const localAppMode = window.localStorage.getItem('appMode')
+    if (localAppMode !== null) {
+      setAppMode(JSON.parse(localAppMode))
+    }
+  }, [])
 
+  useEffect(() => {
+    window.localStorage.setItem('appMode', JSON.stringify(appMode))
+  }, [appMode])
+  useEffect(() => {
+    window.localStorage.setItem('isSidebarOpen', JSON.stringify(isSidebarOpen))
+  }, [isSidebarOpen])
+  useEffect(() => {
+    window.localStorage.setItem('streetsData', JSON.stringify(streets))
+  }, [streets])
+  useEffect(() => {
+    recalculateCanceledAmount();
+    window.localStorage.setItem('canceledAddressesData', JSON.stringify(reasonsData))
+  }, [reasonsData])
+  
   function recalculateCanceledAmount() {
     let newCanceledAmount = 0;
     reasonsData.forEach(reason => {
@@ -368,6 +391,40 @@ function App() {
 
   }
 
+  function handleReorderingArrowClick (index: number) {
+    if (streetToReorderIndex === null) {
+      let arrayIndex = -1;
+      for (let [indexInArray, street] of streets.entries()) {
+        if (street.index == index) {
+          arrayIndex = indexInArray;
+          break;
+        }
+      }
+      setStreetToReorderIndex(index)
+      setStreetToReorderIndexInArray(arrayIndex)
+    } else {
+      const nextStreets: StreetObject[] = streets;
+      let arrayIndex = -1;
+      for (let [indexInArray, street] of nextStreets.entries()) {
+        if (street.index == streetToReorderIndex) {
+          arrayIndex = indexInArray;
+          break;
+        }
+      }
+      let movedStreet: StreetObject = nextStreets.splice(arrayIndex, 1)[0]
+      for (let [indexInArray, street] of nextStreets.entries()) {
+        if (street.index == index) {
+          arrayIndex = indexInArray;
+          break;
+        }
+      }
+      nextStreets.splice(arrayIndex + 1, 0, movedStreet);
+      setStreets(nextStreets); 
+      setStreetToReorderIndex(null)
+      setStreetToReorderIndexInArray(null)
+    }
+  }
+
   const streetsList = appMode != 'view canceled' ? streets.filter((street) => {
     if (appMode == 'addresses' || appMode == 'checklist' || appMode == 'add canceled') {
       return street.isEnabled;
@@ -380,7 +437,8 @@ function App() {
       {
         'grey_bg': street.index % 2 == 0,
         'visited': street.isVisited && (appMode == 'checklist' || appMode == 'add canceled'),
-        'canceled': street.isCanceled && (appMode == 'checklist' || appMode == 'add canceled')
+        'canceled': street.isCanceled && (appMode == 'checklist' || appMode == 'add canceled'),
+        'is_reordered': street.index == streetToReorderIndex
       }
     );
 
@@ -467,6 +525,29 @@ function App() {
       )
     }) : null;
 
+    function ReorderingArrow () {
+      if (streetToReorderIndex === null || streetToReorderIndexinArray === null) {
+        return appMode == 'streets' ? (
+          <div className="reordering_arrow" onClick={() => handleReorderingArrowClick(street.index)}>
+            <FontAwesomeIcon icon={faArrowsUpDown} />
+          </div>
+        ) : null
+      } else {
+        return appMode == 'streets' &&
+          street.index != streetToReorderIndex &&
+          (streetToReorderIndexinArray == 0 ||
+            street.index != streets[streetToReorderIndexinArray - 1].index) &&
+          street.index != streets[streets.length - 1].index ? (
+          <div
+            className="reordering_arrow green"
+            onClick={() => handleReorderingArrowClick(street.index)}
+          >
+            <FontAwesomeIcon icon={faArrowDown} />
+          </div>
+        ) : null;
+      }
+    };
+
     return (
       <div className="list_item_wrapper" key={street.index}>
         <div
@@ -481,6 +562,7 @@ function App() {
           >
             { street.name }  
           </div>
+          <ReorderingArrow/>
           { defaultAddressesList }
           { addressesList }
         </div>

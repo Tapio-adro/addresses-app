@@ -54,23 +54,28 @@ import { StreetObject } from '../shared/lib/types';
 
 let streetsData: StreetObject[] = [];
 
-for (const [index, street] of streets.entries()) {
-  let isEnabledByDefault = defaultStreets.includes(street);
-  let streetObject: StreetObject = {
-    name: street,
-    index: index,
-    isVisited: false,
-    isCanceled: false,
-    isEnabled: isEnabledByDefault,
-    isEnabledByDefault: isEnabledByDefault,
-    lastAddressIndex: 1,
-    lastDefaultAddressIndex: 1,
-    addresses: [{ value: '', index: 0, isVisited: false, isCanceled: false }],
-    defaultAddresses: [
-      { value: '', index: 0, isVisited: false, isCanceled: false },
-    ],
-  };
-  streetsData.push(streetObject);
+let localStreetsData = window.localStorage.getItem('streetsData');
+if (localStreetsData !== null) {
+  streetsData = JSON.parse(localStreetsData);
+} else {
+  for (const [index, street] of streets.entries()) {
+    let isEnabledByDefault = defaultStreets.includes(street);
+    let streetObject: StreetObject = {
+      name: street,
+      index: index,
+      isVisited: false,
+      isCanceled: false,
+      isEnabled: isEnabledByDefault,
+      isEnabledByDefault: isEnabledByDefault,
+      lastAddressIndex: 1,
+      lastDefaultAddressIndex: 1,
+      addresses: [{ value: '', index: 0, isVisited: false, isCanceled: false }],
+      defaultAddresses: [
+        { value: '', index: 0, isVisited: false, isCanceled: false },
+      ],
+      isBeingReordered: false
+    };
+    streetsData.push(streetObject);
+  }
 }
-
 export default streetsData;
