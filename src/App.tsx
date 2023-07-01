@@ -30,6 +30,7 @@ function getDefaultCancelationAddress(): StreetAndNumber {
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
   const [appMode, setAppMode] = useState<AppMode>('view canceled')
+  const [nextAppMode, setNextAppMode] = useState<AppMode>(appMode)
   const [streets, setStreets] = useState<StreetObject[]>(initialStreets)
   const [streetToReorderIndex, setStreetToReorderIndex] = useState<number | null>(null)
   const [streetToReorderIndexinArray, setStreetToReorderIndexInArray] = useState<number | null>(null)
@@ -38,6 +39,7 @@ function App() {
   const [reasonsData, setReasonsData] = useState<ReasonWithAddressesObject[]>(canceledAddressesData);
   const [canceledAmount, setCanceledAmount] = useState<number>(0);
   const [streetsListElement, enableStreetsListAnimations] = useAutoAnimate()
+  const [areAnimationsEnabled, setAreAnimationsEnabled] = useState(true)
 
   useEffect(() => {
     const localIsSidebarOpen = window.localStorage.getItem('isSidebarOpen')
@@ -63,7 +65,15 @@ function App() {
     recalculateCanceledAmount();
     window.localStorage.setItem('canceledAddressesData', JSON.stringify(reasonsData))
   }, [reasonsData])
-  
+  useEffect(() => {
+    enableStreetsListAnimations(areAnimationsEnabled)
+    handleReorderingReset()
+    setAppMode(nextAppMode)
+    if (isSidebarOpen) {
+      setIsSidebarOpen(false)
+    }
+  }, [areAnimationsEnabled])
+
   function recalculateCanceledAmount() {
     let newCanceledAmount = 0;
     reasonsData.forEach(reason => {
@@ -85,12 +95,24 @@ function App() {
   }
 
   function changeAppMode (mode: AppMode) {
-    console.log(mode != 'view canceled');
-    enableStreetsListAnimations(appMode != 'view canceled')
-    handleReorderingReset()
-    setAppMode(mode)
-    if (isSidebarOpen) {
-      setIsSidebarOpen(false)
+    setNextAppMode(mode)
+    if (areAnimationsEnabled == (mode != 'view canceled')) {
+      handleReorderingReset()
+      setAppMode(mode)
+      if (isSidebarOpen) {
+        setIsSidebarOpen(false)
+      }
+    } else {
+      if (appMode == 'view canceled') {
+        enableStreetsListAnimations(areAnimationsEnabled)
+        handleReorderingReset()
+        setAppMode(mode)
+        if (isSidebarOpen) {
+          setIsSidebarOpen(false)
+        }
+      } else {
+        setAreAnimationsEnabled(mode != 'view canceled')
+      }
     }
   }
 
