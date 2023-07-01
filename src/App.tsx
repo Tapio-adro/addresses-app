@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import classNames from 'classnames';
+import { useAutoAnimate } from '@formkit/auto-animate/react'
 import initialStreets from './assets/data/StreetsData.tsx';
 import Modal from './components/Modal.tsx';
 import CanceledAddressesList from './components/CanceledAddressesList.tsx';
@@ -11,7 +12,7 @@ import { canceledAddressesData } from './assets/data/ReasonsData.tsx';
 import { StreetObject, AddressObject, StreetAndNumber, AppMode, ReasonWithAddressesObject } from './assets/shared/lib/types'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDown, faArrowsUpDown, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faArrowDown, faArrowsUpDown, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { faExclamation } from "@fortawesome/free-solid-svg-icons";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { faSquareCheck } from "@fortawesome/free-solid-svg-icons";
@@ -36,6 +37,7 @@ function App() {
   const [currentCancelationAddress, setCurrentCancelationAddress] = useState<StreetAndNumber>(getDefaultCancelationAddress())
   const [reasonsData, setReasonsData] = useState<ReasonWithAddressesObject[]>(canceledAddressesData);
   const [canceledAmount, setCanceledAmount] = useState<number>(0);
+  const [streetsListElement, enableStreetsListAnimations] = useAutoAnimate()
 
   useEffect(() => {
     const localIsSidebarOpen = window.localStorage.getItem('isSidebarOpen')
@@ -83,6 +85,9 @@ function App() {
   }
 
   function changeAppMode (mode: AppMode) {
+    console.log(mode != 'view canceled');
+    enableStreetsListAnimations(appMode != 'view canceled')
+    handleReorderingReset()
     setAppMode(mode)
     if (isSidebarOpen) {
       setIsSidebarOpen(false)
@@ -90,6 +95,7 @@ function App() {
   }
 
   function handleStreetClick(streetIndex: number) {
+    if (streetToReorderIndex !== null) return;
     const nextStreets: StreetObject[] = streets.map(street => {
       if (street.index != streetIndex) {
         return street;
@@ -424,6 +430,10 @@ function App() {
       setStreetToReorderIndexInArray(null)
     }
   }
+  function handleReorderingReset () {
+    setStreetToReorderIndex(null)
+    setStreetToReorderIndexInArray(null)
+  }
 
   const streetsList = appMode != 'view canceled' ? streets.filter((street) => {
     if (appMode == 'addresses' || appMode == 'checklist' || appMode == 'add canceled') {
@@ -533,18 +543,27 @@ function App() {
           </div>
         ) : null
       } else {
-        return appMode == 'streets' &&
-          street.index != streetToReorderIndex &&
-          (streetToReorderIndexinArray == 0 ||
-            street.index != streets[streetToReorderIndexinArray - 1].index) &&
-          street.index != streets[streets.length - 1].index ? (
-          <div
-            className="reordering_arrow green"
-            onClick={() => handleReorderingArrowClick(street.index)}
-          >
-            <FontAwesomeIcon icon={faArrowDown} />
-          </div>
-        ) : null;
+        if (street.index == streetToReorderIndex) {
+          return (
+            <div
+              className="reordering_arrow cross"
+              onClick={() => handleReorderingReset()}
+            >
+              <FontAwesomeIcon icon={faXmark} />
+            </div>
+          )
+        } else {
+          return appMode == 'streets' &&
+            (streetToReorderIndexinArray == 0 ||
+              street.index != streets[streetToReorderIndexinArray - 1].index) ? (
+            <div
+              className="reordering_arrow green"
+              onClick={() => handleReorderingArrowClick(street.index)}
+            >
+              <FontAwesomeIcon icon={faArrowDown} />
+            </div>
+          ) : null;
+        }
       }
     };
 
@@ -593,6 +612,7 @@ function App() {
         ></CanceledAddressesList>
         <div id="list"
           className={appMode == "default streets" || appMode == "streets" ? "any_streets_mode" : ""}
+          ref={streetsListElement}
         >
           {streetsList}
         </div>
@@ -680,7 +700,7 @@ function App() {
           <button
             id="toggle_sidebar_button"
             className={isSidebarOpen ? "open" : ""}
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            onClick={() => {setIsSidebarOpen(!isSidebarOpen); handleReorderingReset()}}
           >
             <FontAwesomeIcon icon={faAngleLeft} />
           </button>

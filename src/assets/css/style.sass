@@ -53,7 +53,6 @@ main
     text-decoration: line-through
     background: transparentize($lightgrey, 0.5)
   &.is_reordered
-    color: $grey
     background: $grey
 #list .list_indicator
   display: block
@@ -134,6 +133,8 @@ main
   margin-left: auto
   &.green
     color: $green
+  &.cross
+    color: $red
 
 #sidebar
   position: fixed
@@ -265,6 +266,7 @@ main
   &.shown
     opacity: 1
     pointer-events: all
+    transform: translate3d(0, 0, 0)
     backdrop-filter: blur(2px)
 
 .modal_overlay
