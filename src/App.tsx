@@ -29,8 +29,8 @@ function getDefaultCancelationAddress(): StreetAndNumber {
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
-  const [appMode, setAppMode] = useState<AppMode>('view canceled')
-  const [nextAppMode, setNextAppMode] = useState<AppMode>(appMode)
+  const [appMode, setAppMode] = useState<AppMode>('checklist')
+  const [nextAppMode, setNextAppMode] = useState<string>('')
   const [streets, setStreets] = useState<StreetObject[]>(initialStreets)
   const [streetToReorderIndex, setStreetToReorderIndex] = useState<number | null>(null)
   const [streetToReorderIndexinArray, setStreetToReorderIndexInArray] = useState<number | null>(null)
@@ -48,7 +48,7 @@ function App() {
     }
     const localAppMode = window.localStorage.getItem('appMode')
     if (localAppMode !== null) {
-      setAppMode(JSON.parse(localAppMode))
+      changeAppMode(JSON.parse(localAppMode))
     }
   }, [])
 
@@ -66,9 +66,10 @@ function App() {
     window.localStorage.setItem('canceledAddressesData', JSON.stringify(reasonsData))
   }, [reasonsData])
   useEffect(() => {
+    if (nextAppMode == '') return;
     enableStreetsListAnimations(areAnimationsEnabled)
     handleReorderingReset()
-    setAppMode(nextAppMode)
+    setAppMode(nextAppMode as AppMode)
     if (isSidebarOpen) {
       setIsSidebarOpen(false)
     }
