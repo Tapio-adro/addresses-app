@@ -52,7 +52,7 @@ function App() {
   const [areAnimationsEnabled, setAreAnimationsEnabled] = useState(true)
   const mainElement = useRef<HTMLDivElement>(null);
   const shouldResetData = isTodayAnotherDay();
-  const longResetPress = useLongPress(tryResetData, () => {}, {shouldPreventDefault: true, delay: 2000});
+  const longResetPress = useLongPress(tryResetData, () => {}, {shouldPreventDefault: true, delay: 1000});
 
   useEffect(() => {
     const localIsSidebarOpen = window.localStorage.getItem('isSidebarOpen')
@@ -888,7 +888,7 @@ function RemovingCross ({
 }) {
   const defaultOptions = {
     shouldPreventDefault: true,
-    delay: 1000,
+    delay: 500,
   };
   const onLongPress = () => {
     onStreetRemove(street.index)
