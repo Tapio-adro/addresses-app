@@ -52,14 +52,18 @@ let defaultStreets: string[] = [
 
 import { StreetObject } from '../shared/lib/types';
 
-let streetsData: StreetObject[] = [];
+let initialStreets: StreetObject[] = [];
+let initialStreetIndex: number = 0;
 
 let localStreetsData = window.localStorage.getItem('streetsData');
-if (localStreetsData !== null) {
-  streetsData = JSON.parse(localStreetsData);
+let localStreetIndex = window.localStorage.getItem('currentStreetIndex');
+if (localStreetsData !== null && localStreetIndex !== null) {
+  initialStreets = JSON.parse(localStreetsData);
+  initialStreetIndex = JSON.parse(localStreetIndex)
 } else {
   for (const [index, street] of streets.entries()) {
     let isEnabledByDefault = defaultStreets.includes(street);
+    initialStreetIndex += 1;
     let streetObject: StreetObject = {
       name: street,
       index: index,
@@ -75,7 +79,8 @@ if (localStreetsData !== null) {
       ],
       isBeingReordered: false
     };
-    streetsData.push(streetObject);
+    initialStreets.push(streetObject);
   }
+  window.localStorage.setItem('currentStreetIndex', JSON.stringify(initialStreetIndex))
 }
-export default streetsData;
+export { initialStreets, initialStreetIndex };

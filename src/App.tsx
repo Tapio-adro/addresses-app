@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
 import classNames from 'classnames';
 import { useAutoAnimate } from '@formkit/auto-animate/react'
-import initialStreets from './assets/data/StreetsData.tsx';
+import { initialStreets, initialStreetIndex } from './assets/data/StreetsData.tsx';
 import Modal from './components/Modal.tsx';
 import CanceledAddressesList from './components/CanceledAddressesList.tsx';
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 import './assets/css/style.css'
 import { canceledAddressesData } from './assets/data/ReasonsData.tsx';
+import useLongPress from './assets/shared/useLongPress.js'
 
 import { StreetObject, AddressObject, StreetAndNumber, AppMode, ReasonWithAddressesObject } from './assets/shared/lib/types'
 
@@ -32,6 +33,7 @@ function App() {
   const [appMode, setAppMode] = useState<AppMode>('checklist')
   const [nextAppMode, setNextAppMode] = useState<string>('')
   const [streets, setStreets] = useState<StreetObject[]>(initialStreets)
+  const [currentStreetIndex, setCurrentStreetIndex] = useState<number>(initialStreetIndex)
   const [streetToReorderIndex, setStreetToReorderIndex] = useState<number | null>(null)
   const [streetToReorderIndexinArray, setStreetToReorderIndexInArray] = useState<number | null>(null)
   const [isAddCanceledModalOpen, setIsAddCanceledModalOpen] = useState<boolean>(false)
@@ -61,6 +63,9 @@ function App() {
   useEffect(() => {
     window.localStorage.setItem('streetsData', JSON.stringify(streets))
   }, [streets])
+  useEffect(() => {
+    window.localStorage.setItem('currentStreetIndex', JSON.stringify(currentStreetIndex))
+  }, [currentStreetIndex])
   useEffect(() => {
     recalculateCanceledAmount();
     window.localStorage.setItem('canceledAddressesData', JSON.stringify(reasonsData))
@@ -432,7 +437,7 @@ function App() {
       setStreetToReorderIndex(index)
       setStreetToReorderIndexInArray(arrayIndex)
     } else {
-      const nextStreets: StreetObject[] = streets;
+      const nextStreets = [...streets];
       let arrayIndex = -1;
       for (let [indexInArray, street] of nextStreets.entries()) {
         if (street.index == streetToReorderIndex) {
@@ -456,6 +461,14 @@ function App() {
   function handleReorderingReset () {
     setStreetToReorderIndex(null)
     setStreetToReorderIndexInArray(null)
+  }
+  function handleStreetRemove (index: number) {
+    let streetToRemoveIndex = streets.findIndex(street => {
+      return street.index === index
+    })
+    const nextStreets = [...streets];
+    nextStreets.splice(streetToRemoveIndex, 1);
+    setStreets(nextStreets);
   }
 
   const streetsList = appMode != 'view canceled' ? streets.filter((street) => {
@@ -558,38 +571,6 @@ function App() {
       )
     }) : null;
 
-    function ReorderingArrow () {
-      if (streetToReorderIndex === null || streetToReorderIndexinArray === null) {
-        return appMode == 'streets' ? (
-          <div className="reordering_arrow" onClick={() => handleReorderingArrowClick(street.index)}>
-            <FontAwesomeIcon icon={faArrowsUpDown} />
-          </div>
-        ) : null
-      } else {
-        if (street.index == streetToReorderIndex) {
-          return (
-            <div
-              className="reordering_arrow cross"
-              onClick={() => handleReorderingReset()}
-            >
-              <FontAwesomeIcon icon={faXmark} />
-            </div>
-          )
-        } else {
-          return appMode == 'streets' &&
-            (streetToReorderIndexinArray == 0 ||
-              street.index != streets[streetToReorderIndexinArray - 1].index) ? (
-            <div
-              className="reordering_arrow green"
-              onClick={() => handleReorderingArrowClick(street.index)}
-            >
-              <FontAwesomeIcon icon={faArrowDown} />
-            </div>
-          ) : null;
-        }
-      }
-    };
-
     return (
       <div className="list_item_wrapper" key={street.index}>
         <div
@@ -604,7 +585,20 @@ function App() {
           >
             { street.name }  
           </div>
-          <ReorderingArrow/>
+          <ReorderingArrow
+            streetToReorderIndex={streetToReorderIndex}
+            streetToReorderIndexinArray={streetToReorderIndexinArray}
+            street={street}
+            streets={streets}
+            appMode={appMode}
+            onReorderingArrowClick={handleReorderingArrowClick}
+            onReorderingReset={handleReorderingReset}
+          />
+          <RemovingCross
+            street={street}
+            appMode={appMode}
+            onStreetRemove={handleStreetRemove}
+          ></RemovingCross>
           { defaultAddressesList }
           { addressesList }
         </div>
@@ -731,6 +725,96 @@ function App() {
       </main>
     </>
   )
+}
+
+function ReorderingArrow({
+  streetToReorderIndex,
+  streetToReorderIndexinArray,
+  street,
+  streets,
+  appMode,
+  onReorderingArrowClick,
+  onReorderingReset,
+}: {
+  streetToReorderIndex: number | null;
+  streetToReorderIndexinArray: number | null;
+  street: StreetObject;
+  streets: StreetObject[];
+  appMode: AppMode;
+  onReorderingArrowClick: Function;
+  onReorderingReset: Function;
+}) {
+  if (streetToReorderIndex === null || streetToReorderIndexinArray === null) {
+    return appMode == 'streets' ? (
+      <div
+        className="reordering_arrow"
+        onClick={() => onReorderingArrowClick(street.index)}
+      >
+        <FontAwesomeIcon icon={faArrowsUpDown} />
+      </div>
+    ) : null;
+  } else {
+    if (street.index == streetToReorderIndex) {
+      return (
+        <div
+          className="reordering_arrow cross"
+          onClick={() => onReorderingReset()}
+        >
+          <FontAwesomeIcon icon={faXmark} />
+        </div>
+      );
+    } else {
+      let arrowClasses = classNames('reordering_arrow', 'green', {
+        'hidden': !(
+          (streetToReorderIndexinArray == 0 ||
+            street.index != streets[streetToReorderIndexinArray - 1].index)
+        ),
+      });
+      return appMode == 'streets' ? (
+        <div
+          className={arrowClasses}
+          onClick={() => onReorderingArrowClick(street.index)}
+        >
+          <FontAwesomeIcon icon={faArrowDown} />
+        </div>
+      ) : null;
+    }
+  }
+};
+function RemovingCross ({
+  street,
+  appMode,
+  onStreetRemove
+}: {
+  street: StreetObject;
+  appMode: AppMode;
+  onStreetRemove: Function;
+}) {
+  const defaultOptions = {
+    shouldPreventDefault: true,
+    delay: 1000,
+  };
+  const onLongPress = () => {
+    onStreetRemove(street.index)
+  };
+  const onClick = () => {
+  }
+  const longPressEvent = useLongPress(onLongPress, onClick, defaultOptions);
+  let crossClasses = classNames(
+    'removing_cross',
+    {
+      'hidden': street.isEnabledByDefault
+    }
+  );
+  return appMode == 'streets' ? (
+    <button
+      {...longPressEvent}
+      className={crossClasses}
+      // onClick={() => onStreetRemove(street.index)}
+    >
+      <FontAwesomeIcon icon={faXmark} />
+    </button>
+  ) : null;
 }
 
 export default App
