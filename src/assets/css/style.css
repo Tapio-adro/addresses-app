@@ -1,4 +1,5 @@
 body {
+  height: 100%;
   overflow-y: hidden;
 }
 
@@ -7,7 +8,7 @@ main {
   padding-left: 5px;
   margin-right: 50px;
   overflow-y: scroll;
-  height: 100vh;
+  height: 100%;
 }
 
 #list {
@@ -180,7 +181,7 @@ main {
   right: 0;
   top: 0;
   width: 200px;
-  height: 100vh;
+  height: 100%;
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
@@ -188,6 +189,8 @@ main {
   transform: translateX(150px);
   transition: transform 0.5s ease-in-out;
   z-index: 2;
+  display: flex;
+  flex-direction: column;
 }
 #sidebar.open {
   transform: translateX(0px);
@@ -200,7 +203,6 @@ main {
   row-gap: 10px;
   width: 100%;
   padding-top: 10px;
-  height: calc(100vh - 50px);
 }
 #mode_buttons .button_wrapper {
   width: 100%;
@@ -294,6 +296,7 @@ main {
   color: #999999;
   cursor: pointer;
   transition: 0.5s;
+  margin-top: auto;
 }
 #toggle_sidebar_button svg {
   transform: scaleX(1);
@@ -314,7 +317,7 @@ main {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   pointer-events: none;
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 0;
@@ -335,7 +338,7 @@ main {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   transition: 0.5s;
   pointer-events: none;
   display: flex;
@@ -355,14 +358,14 @@ main {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   pointer-events: none;
   transition: 0.5s;
   transition-timing-function: ease-in;
-  transform: translateY(-30vh);
+  transform: translateY(-30%);
   opacity: 0;
 }
 .modal_wrapper.open {
@@ -486,6 +489,7 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
   border-radius: 50%;
   background-color: white;
   height: 18px;
@@ -500,7 +504,6 @@ main {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 120px;
 }
 .reasons_container .caption.open .text {
   overflow: auto;
@@ -514,6 +517,7 @@ main {
   height: 18px;
   display: flex;
   align-items: center;
+  margin-left: auto;
 }
 .reasons_container .caption.open .chevron {
   transform: scaleY(-1);
