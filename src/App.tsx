@@ -61,6 +61,9 @@ function App() {
       changeAppMode(JSON.parse(localAppMode))
     }
     console.log(shouldResetData);
+    if (shouldResetData) {
+      resetData();
+    }
   }, [])
 
   useEffect(() => {
@@ -512,7 +515,37 @@ function App() {
     }, 500)
   }
 
+  function resetData () {
+    const nextStreets: StreetObject[] = streets.map(street => {
 
+      const newAddresses = street.addresses.filter((address) => {
+        return address.value == '';
+      })
+      const newDefaultAddresses = street.addresses.map((address) => {
+        return {
+          ...address,
+          isVisited: false,
+          isCanceled: false,
+        }
+      })
+      return {
+        ...street,
+        addresses: newAddresses,
+        defaultAddresses: newDefaultAddresses,
+        isCanceled: false,
+        isVisited: false,
+        isEnabled: street.isEnabledByDefault
+      };
+    });
+    setStreets(nextStreets);
+    const newReasonsData = reasonsData.map((reason) => {
+      return {
+        ...reason,
+        addresses: []
+      }
+    });
+    setReasonsData(newReasonsData);
+  }
 
   const streetsList = appMode != 'view canceled' ? streets.filter((street) => {
     if (appMode == 'addresses' || appMode == 'checklist' || appMode == 'add canceled') {
