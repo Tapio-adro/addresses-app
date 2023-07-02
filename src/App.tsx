@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import classNames from 'classnames';
 import { useAutoAnimate } from '@formkit/auto-animate/react'
-import { initialStreets } from './assets/data/StreetsData.tsx';
+import { initialStreets, initialStreetIndex } from './assets/data/StreetsData.tsx';
 import Modal from './components/Modal.tsx';
 import CanceledAddressesList from './components/CanceledAddressesList.tsx';
 // import reactLogo from './assets/react.svg'
@@ -27,13 +27,19 @@ function getDefaultCancelationAddress(): StreetAndNumber {
     {street: '', number: '', streetIndex: -1, numberIndex: -1, isDefaultAddress: false}
   ))
 }
+function getEmptyAddress (index) {
+  return JSON.parse(JSON.stringify(
+    {value: '', index: index, isVisited: false, isCanceled: false}
+  ))
+}
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
   const [appMode, setAppMode] = useState<AppMode>('checklist')
   const [nextAppMode, setNextAppMode] = useState<string>('')
   const [streets, setStreets] = useState<StreetObject[]>(initialStreets)
-  // const [currentStreetIndex, setCurrentStreetIndex] = useState<number>(initialStreetIndex)
+  const [currentStreetIndex, setCurrentStreetIndex] = useState<number>(initialStreetIndex)
+  const [streetInputValue, setStreetInputValue] = useState<string>('')
   const [streetToReorderIndex, setStreetToReorderIndex] = useState<number | null>(null)
   const [streetToReorderIndexinArray, setStreetToReorderIndexInArray] = useState<number | null>(null)
   const [isAddCanceledModalOpen, setIsAddCanceledModalOpen] = useState<boolean>(false)
@@ -42,6 +48,8 @@ function App() {
   const [canceledAmount, setCanceledAmount] = useState<number>(0);
   const [streetsListElement, enableStreetsListAnimations] = useAutoAnimate()
   const [areAnimationsEnabled, setAreAnimationsEnabled] = useState(true)
+  const mainElement = useRef<HTMLDivElement>(null);
+  const shouldResetData = isTodayAnotherDay();
 
   useEffect(() => {
     const localIsSidebarOpen = window.localStorage.getItem('isSidebarOpen')
@@ -52,6 +60,7 @@ function App() {
     if (localAppMode !== null) {
       changeAppMode(JSON.parse(localAppMode))
     }
+    console.log(shouldResetData);
   }, [])
 
   useEffect(() => {
@@ -62,10 +71,12 @@ function App() {
   }, [isSidebarOpen])
   useEffect(() => {
     window.localStorage.setItem('streetsData', JSON.stringify(streets))
+    console.log('update');
   }, [streets])
-  // useEffect(() => {
-  //   window.localStorage.setItem('currentStreetIndex', JSON.stringify(currentStreetIndex))
-  // }, [currentStreetIndex])
+  useEffect(() => {
+    window.localStorage.setItem('currentStreetIndex', JSON.stringify(currentStreetIndex))
+    console.log('update index');
+  }, [currentStreetIndex])
   useEffect(() => {
     recalculateCanceledAmount();
     window.localStorage.setItem('canceledAddressesData', JSON.stringify(reasonsData))
@@ -231,7 +242,7 @@ function App() {
         let address = targetAddresses[key];
         if (address.index == addressIndex && targetAddresses[targetAddresses.length - 1].index == address.index) {
           let newAddresses = targetAddresses.slice();
-          newAddresses.push({value: '', index: targetLastAddressIndex, isVisited: false, isCanceled: false})
+          newAddresses.push(getEmptyAddress(targetLastAddressIndex))
           return {
             ...street,
             [targetAddressesKey]: newAddresses,
@@ -470,6 +481,38 @@ function App() {
     nextStreets.splice(streetToRemoveIndex, 1);
     setStreets(nextStreets);
   }
+  function handleStreetAdded () {
+    const nextStreets = [...streets];
+    let newStreet: StreetObject = {
+      name: streetInputValue,
+      index: currentStreetIndex,
+      isVisited: false,
+      isCanceled: false,
+      isEnabled: true,
+      isEnabledByDefault: false,
+      lastAddressIndex: 1,
+      lastDefaultAddressIndex: 1,
+      addresses: [{ value: '', index: 0, isVisited: false, isCanceled: false }],
+      defaultAddresses: [
+        { value: '', index: 0, isVisited: false, isCanceled: false },
+      ],
+      isBeingReordered: false
+    };
+    console.log(newStreet);
+    setCurrentStreetIndex(currentStreetIndex + 1)
+    setStreetInputValue('');
+    nextStreets.push(newStreet);
+    setStreets(nextStreets);
+    document.getElementById('street_input')?.focus();
+    setTimeout(() => {
+      if (mainElement.current !== null) {
+        console.log('scroll');
+        mainElement.current.scrollTo({left: 0, top: mainElement.current.scrollHeight, behavior: "smooth"})
+      }
+    }, 500)
+  }
+
+
 
   const streetsList = appMode != 'view canceled' ? streets.filter((street) => {
     if (appMode == 'addresses' || appMode == 'checklist' || appMode == 'add canceled') {
@@ -608,7 +651,7 @@ function App() {
 
   return (
     <>
-      <main>
+      <main ref={mainElement}>
         <Modal
           isOpen={isAddCanceledModalOpen}
           currentAddress={currentCancelationAddress}
@@ -633,7 +676,10 @@ function App() {
         >
           {streetsList}
           <StreetInput
+            streetInputValue={streetInputValue}
             appMode={appMode}
+            onStreetInputChange={setStreetInputValue}
+            onStreetAdded={handleStreetAdded}
           ></StreetInput>
         </div>
         <div
@@ -821,22 +867,52 @@ function RemovingCross ({
 }
 function StreetInput ({
   // street,
-  appMode
-  // onStreetRemove
+  appMode,
+  streetInputValue,
+  onStreetInputChange,
+  onStreetAdded,
 }: {
   // street: StreetObject;
   appMode: AppMode;
-  // onStreetRemove: Function;
+  streetInputValue: string;
+  onStreetInputChange: Function;
+  onStreetAdded: Function;
 }) {
+  const [isCheckmarkShown, setIsCheckmarkShown] = useState<boolean>(false)
+
+  let checkmarkClasses = classNames(
+    {
+      'hidden': !isCheckmarkShown && streetInputValue == '',
+      'grey': streetInputValue == ''
+    }
+  );
+
   return appMode == 'streets' ? (
     <div id="street_input_wrapper">
       <div id="street_input_indicator"></div>
-      <input id="street_input"/>
-      <div id="street_input_checkmark">
+      <input
+        id="street_input"
+        value={streetInputValue}
+        onChange={(e) => onStreetInputChange(e.target.value)}
+        onBlur={() => setIsCheckmarkShown(false)}
+        onFocus={() => setIsCheckmarkShown(true)}
+        type="text"
+        placeholder="Назва вулиці"
+      />
+      <div id="street_input_checkmark" className={checkmarkClasses} onClick={() => onStreetAdded()}>
         <FontAwesomeIcon icon={faCheck} />
       </div>
     </div>
   ) : null;
+}
+
+function isTodayAnotherDay () {
+  let lastDateData = window.localStorage.getItem('lastDate');
+  if (lastDateData === null) return false;
+  let now = new Date();
+  let lastDate = JSON.parse(lastDateData);
+  window.localStorage.setItem('lastDate', JSON.stringify(new Date()))
+  return now.getDate() !== lastDate.getDate();
 }
 
 export default App

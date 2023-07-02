@@ -1,3 +1,7 @@
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   height: 100%;
   overflow: hidden;
@@ -589,4 +593,15 @@ main {
   border: 2px solid #04AA6D;
   border-radius: 5px;
   margin: 1px 0;
+  pointer-events: all;
+  transition: 0.5s;
+}
+#street_input_wrapper #street_input_checkmark.hidden {
+  pointer-events: none;
+  opacity: 0;
+}
+#street_input_wrapper #street_input_checkmark.grey {
+  pointer-events: none;
+  color: #bfbfbf;
+  border-color: #bfbfbf;
 }/*# sourceMappingURL=style.css.map */
