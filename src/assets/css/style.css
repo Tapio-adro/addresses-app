@@ -1,14 +1,14 @@
 body {
   height: 100%;
-  overflow-y: hidden;
+  overflow: hidden;
 }
 
 main {
   padding: 10px;
   padding-left: 5px;
   margin-right: 50px;
+  height: 100vh;
   overflow-y: scroll;
-  height: 100%;
 }
 
 #list {
@@ -548,4 +548,45 @@ main {
 }
 .reasons_container .addresses.open {
   display: block;
+}
+
+#street_input_wrapper {
+  display: flex;
+}
+#street_input_wrapper #street_input_indicator {
+  width: 5px;
+  height: 22.4px;
+  margin-right: 5px;
+  background-color: #ddd;
+}
+#street_input_wrapper #street_input {
+  height: 22.4px;
+  margin: 1px;
+  margin-left: 0;
+  width: 120px;
+  font-size: 16px;
+  padding: 2px;
+  padding-bottom: 1px;
+  padding-left: 3px;
+  outline: none;
+  border: 1px solid #666;
+  border-radius: 3px;
+  transition: 0.5s;
+  margin-right: 5px;
+  color: #404040;
+  font-family: "Times New Roman", Times, Baskerville, Georgia, serif;
+}
+#street_input_wrapper #street_input:focus {
+  border: 1px solid #04AA6D;
+}
+#street_input_wrapper #street_input_checkmark {
+  width: 22.4px;
+  height: 22.4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #04AA6D;
+  border: 2px solid #04AA6D;
+  border-radius: 5px;
+  margin: 1px 0;
 }/*# sourceMappingURL=style.css.map */

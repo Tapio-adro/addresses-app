@@ -14,19 +14,16 @@ $darkgrey: #404040
 
 body
   height: 100%
-  overflow-y: hidden
+  overflow: hidden
 main
   padding: 10px
   padding-left: 5px
   margin-right: 50px
+  height: 100vh
   overflow-y: scroll
-  height: 100%
 #list
-  // display: grid
-  // grid-template-columns: 5px max-content
   transition: 0.5s
   &.any_streets_mode
-    // grid-template-columns: 10px max-content
 #list .list_item_wrapper
   display: flex
 #list .list_item_container
@@ -470,3 +467,39 @@ main
         color: $red
     &.open
       display: block
+
+#street_input_wrapper
+  display: flex
+  #street_input_indicator
+    width: 5px
+    height: 22.4px
+    margin-right: 5px
+    background-color: $midlightgrey
+  #street_input
+    height: 22.4px
+    margin: 1px
+    margin-left: 0
+    width: 120px
+    font-size: 16px
+    padding: 2px
+    padding-bottom: 1px
+    padding-left: 3px
+    outline: none
+    border: 1px solid $textgrey
+    border-radius: 3px
+    transition: 0.5s
+    margin-right: 5px
+    color: $darkgrey
+    font-family: "Times New Roman", Times, Baskerville, Georgia, serif
+    &:focus
+      border: 1px solid $green
+  #street_input_checkmark
+    width: 22.4px
+    height: 22.4px
+    display: flex
+    justify-content: center
+    align-items: center
+    color: $green
+    border: 2px solid $green
+    border-radius: 5px
+    margin: 1px 0

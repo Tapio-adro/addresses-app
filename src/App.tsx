@@ -13,7 +13,7 @@ import useLongPress from './assets/shared/useLongPress.js'
 import { StreetObject, AddressObject, StreetAndNumber, AppMode, ReasonWithAddressesObject } from './assets/shared/lib/types'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDown, faArrowsUpDown, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faArrowDown, faArrowsUpDown, faCheck, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { faExclamation } from "@fortawesome/free-solid-svg-icons";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { faSquareCheck } from "@fortawesome/free-solid-svg-icons";
@@ -632,6 +632,9 @@ function App() {
           ref={streetsListElement}
         >
           {streetsList}
+          <StreetInput
+            appMode={appMode}
+          ></StreetInput>
         </div>
         <div
           id="sidebar"
@@ -814,6 +817,25 @@ function RemovingCross ({
     >
       <FontAwesomeIcon icon={faXmark} />
     </button>
+  ) : null;
+}
+function StreetInput ({
+  // street,
+  appMode
+  // onStreetRemove
+}: {
+  // street: StreetObject;
+  appMode: AppMode;
+  // onStreetRemove: Function;
+}) {
+  return appMode == 'streets' ? (
+    <div id="street_input_wrapper">
+      <div id="street_input_indicator"></div>
+      <input id="street_input"/>
+      <div id="street_input_checkmark">
+        <FontAwesomeIcon icon={faCheck} />
+      </div>
+    </div>
   ) : null;
 }
 
