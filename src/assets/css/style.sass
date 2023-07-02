@@ -191,6 +191,16 @@ main
     justify-content: center
   #reset_button_container
     margin-left: 40px
+  #reset_button_container button
+    transition: 1.9s
+    background: linear-gradient(to top, $palered 50%, white 50%) top
+    background-size: 100% 220%
+    svg
+      transition: 2s
+    &:active
+      background-position: bottom
+      svg
+        transform: rotate(360deg)
   .button_desc
     font-size: 10px
     width: 140px
@@ -372,6 +382,29 @@ main
       border-bottom-right-radius: 10px
       background-image: linear-gradient(transparentize($red, 0.3), $red)
       color: white
+.modal_content#confirmation
+  display: flex
+  flex-direction: column
+  justify-content: center
+  padding: 20px
+  width: 250px
+  .header
+    margin: 0 auto 20px
+  .buttons
+    display: flex
+    justify-content: space-evenly
+    div
+      border-radius: 5px
+      color: white
+      padding: 5px 7px
+      font-size: 12px
+      width: 32px
+      text-align: center
+    .accept
+      background-color: $green
+    .decline
+      background-color: $red
+
 
 .reasons_wrapper
   padding-left: 5px

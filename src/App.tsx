@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { useAutoAnimate } from '@formkit/auto-animate/react'
 import { initialStreets, initialStreetIndex } from './assets/data/StreetsData.tsx';
 import Modal from './components/Modal.tsx';
+import ConfirmationModal from './components/ConfirmationModal.tsx';
 import CanceledAddressesList from './components/CanceledAddressesList.tsx';
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
@@ -43,6 +44,7 @@ function App() {
   const [streetToReorderIndex, setStreetToReorderIndex] = useState<number | null>(null)
   const [streetToReorderIndexinArray, setStreetToReorderIndexInArray] = useState<number | null>(null)
   const [isAddCanceledModalOpen, setIsAddCanceledModalOpen] = useState<boolean>(false)
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState<boolean>(false)
   const [currentCancelationAddress, setCurrentCancelationAddress] = useState<StreetAndNumber>(getDefaultCancelationAddress())
   const [reasonsData, setReasonsData] = useState<ReasonWithAddressesObject[]>(canceledAddressesData);
   const [canceledAmount, setCanceledAmount] = useState<number>(0);
@@ -50,6 +52,7 @@ function App() {
   const [areAnimationsEnabled, setAreAnimationsEnabled] = useState(true)
   const mainElement = useRef<HTMLDivElement>(null);
   const shouldResetData = isTodayAnotherDay();
+  const longResetPress = useLongPress(tryResetData, () => {}, {shouldPreventDefault: true, delay: 2000});
 
   useEffect(() => {
     const localIsSidebarOpen = window.localStorage.getItem('isSidebarOpen')
@@ -515,7 +518,13 @@ function App() {
     }, 500)
   }
 
+  function tryResetData () {
+    console.log('try reset');
+    setIsConfirmationModalOpen(true)
+    setIsSidebarOpen(false);
+  }
   function resetData () {
+    setIsConfirmationModalOpen(false)
     const nextStreets: StreetObject[] = streets.map(street => {
 
       const newAddresses = street.addresses.filter((address) => {
@@ -691,6 +700,12 @@ function App() {
           onOpenChange={() => setIsAddCanceledModalOpen(!isAddCanceledModalOpen)}
           onAddressCanceled={(reason: string) => cancelCurrentAddress(reason)}
         ></Modal>
+        <ConfirmationModal
+          isOpen={isConfirmationModalOpen}
+          onOpenChange={() => setIsConfirmationModalOpen(!isConfirmationModalOpen)}
+          onConfirmed={() => resetData()}
+        >
+        </ConfirmationModal>
         <div 
           id="dark_background" 
           className={isSidebarOpen ? "shown" : ""}
@@ -787,7 +802,7 @@ function App() {
             </div>
             <div className="button_wrapper">
               <div className="button_container" id="reset_button_container">
-                <button>
+                <button {...longResetPress}>
                   <FontAwesomeIcon icon={faRotateRight} />
                 </button>
               </div>

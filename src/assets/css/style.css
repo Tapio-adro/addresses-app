@@ -222,6 +222,20 @@ main {
 #mode_buttons #reset_button_container {
   margin-left: 40px;
 }
+#mode_buttons #reset_button_container button {
+  transition: 1.9s;
+  background: linear-gradient(to top, #f28c8c 50%, white 50%) top;
+  background-size: 100% 220%;
+}
+#mode_buttons #reset_button_container button svg {
+  transition: 2s;
+}
+#mode_buttons #reset_button_container button:active {
+  background-position: bottom;
+}
+#mode_buttons #reset_button_container button:active svg {
+  transform: rotate(360deg);
+}
 #mode_buttons .button_desc {
   font-size: 10px;
   width: 140px;
@@ -438,6 +452,35 @@ main {
   border-bottom-right-radius: 10px;
   background-image: linear-gradient(rgba(251, 106, 106, 0.7), #fb6a6a);
   color: white;
+}
+
+.modal_content#confirmation {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+  width: 250px;
+}
+.modal_content#confirmation .header {
+  margin: 0 auto 20px;
+}
+.modal_content#confirmation .buttons {
+  display: flex;
+  justify-content: space-evenly;
+}
+.modal_content#confirmation .buttons div {
+  border-radius: 5px;
+  color: white;
+  padding: 5px 7px;
+  font-size: 12px;
+  width: 32px;
+  text-align: center;
+}
+.modal_content#confirmation .buttons .accept {
+  background-color: #04AA6D;
+}
+.modal_content#confirmation .buttons .decline {
+  background-color: #fb6a6a;
 }
 
 .reasons_wrapper {
