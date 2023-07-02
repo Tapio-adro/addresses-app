@@ -339,8 +339,6 @@ main {
   opacity: 1;
   pointer-events: all;
   transform: translate3d(0, 0, 0);
-  -webkit-backdrop-filter: blur(2px);
-          backdrop-filter: blur(2px);
 }
 
 .modal_overlay {
