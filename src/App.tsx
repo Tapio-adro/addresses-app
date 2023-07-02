@@ -704,8 +704,7 @@ function App() {
           isOpen={isConfirmationModalOpen}
           onOpenChange={() => setIsConfirmationModalOpen(!isConfirmationModalOpen)}
           onConfirmed={() => resetData()}
-        >
-        </ConfirmationModal>
+        ></ConfirmationModal>
         <div 
           id="dark_background" 
           className={isSidebarOpen ? "shown" : ""}
