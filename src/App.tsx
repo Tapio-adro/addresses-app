@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import classNames from 'classnames';
 import { useAutoAnimate } from '@formkit/auto-animate/react'
-import { initialStreets, initialStreetIndex } from './assets/data/StreetsData.tsx';
+import { initialStreets } from './assets/data/StreetsData.tsx';
 import Modal from './components/Modal.tsx';
 import CanceledAddressesList from './components/CanceledAddressesList.tsx';
 // import reactLogo from './assets/react.svg'
@@ -33,7 +33,7 @@ function App() {
   const [appMode, setAppMode] = useState<AppMode>('checklist')
   const [nextAppMode, setNextAppMode] = useState<string>('')
   const [streets, setStreets] = useState<StreetObject[]>(initialStreets)
-  const [currentStreetIndex, setCurrentStreetIndex] = useState<number>(initialStreetIndex)
+  // const [currentStreetIndex, setCurrentStreetIndex] = useState<number>(initialStreetIndex)
   const [streetToReorderIndex, setStreetToReorderIndex] = useState<number | null>(null)
   const [streetToReorderIndexinArray, setStreetToReorderIndexInArray] = useState<number | null>(null)
   const [isAddCanceledModalOpen, setIsAddCanceledModalOpen] = useState<boolean>(false)
@@ -63,9 +63,9 @@ function App() {
   useEffect(() => {
     window.localStorage.setItem('streetsData', JSON.stringify(streets))
   }, [streets])
-  useEffect(() => {
-    window.localStorage.setItem('currentStreetIndex', JSON.stringify(currentStreetIndex))
-  }, [currentStreetIndex])
+  // useEffect(() => {
+  //   window.localStorage.setItem('currentStreetIndex', JSON.stringify(currentStreetIndex))
+  // }, [currentStreetIndex])
   useEffect(() => {
     recalculateCanceledAmount();
     window.localStorage.setItem('canceledAddressesData', JSON.stringify(reasonsData))
