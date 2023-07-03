@@ -13,10 +13,14 @@ $darkgrey: #404040
     
 body
   height: 100%
+  overflow: hidden
 main
+  height: calc( 100vh - 50px )
   padding: 10px
   padding-left: 5px
   margin-right: 50px
+  // overflow: hidden
+  overflow-y: scroll
 #list
   transition: 0.5s
   &.any_streets_mode
@@ -275,7 +279,7 @@ main
       color: $green
 
 #dark_background
-  position: absolute
+  position: fixed
   top: 0
   left: 0
   width: 100vw
@@ -292,7 +296,7 @@ main
 
 .modal_overlay
   z-index: 3
-  position: absolute
+  position: fixed
   top: 0
   left: 0
   width: 100vw
@@ -309,7 +313,7 @@ main
     background-color: transparentize(#000, 0.5)
 .modal_wrapper
   z-index: 4
-  position: absolute
+  position: fixed
   top: 0
   left: 0
   width: 100vw
