@@ -68,7 +68,7 @@ export default function CanceledAddressesList({
     }
   )
 
-  return (
+  return appMode == 'view canceled' ? (
     <>
       <div className="reasons_wrapper">
         <div className={headerClasses}>
@@ -80,5 +80,5 @@ export default function CanceledAddressesList({
         </div>
       </div>
     </>
-  )
+  ) : null;
 }

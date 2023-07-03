@@ -693,23 +693,23 @@ function App() {
 
   return (
     <>
+      <Modal
+        isOpen={isAddCanceledModalOpen}
+        currentAddress={currentCancelationAddress}
+        onOpenChange={() => setIsAddCanceledModalOpen(!isAddCanceledModalOpen)}
+        onAddressCanceled={(reason: string) => cancelCurrentAddress(reason)}
+      ></Modal>
+      <ConfirmationModal
+        isOpen={isConfirmationModalOpen}
+        onOpenChange={() => setIsConfirmationModalOpen(!isConfirmationModalOpen)}
+        onConfirmed={() => resetData()}
+      ></ConfirmationModal>
+      <div 
+        id="dark_background" 
+        className={isSidebarOpen ? "shown" : ""}
+        onClick={() => setIsSidebarOpen(false)}
+      ></div>
       <main ref={mainElement}>
-        <Modal
-          isOpen={isAddCanceledModalOpen}
-          currentAddress={currentCancelationAddress}
-          onOpenChange={() => setIsAddCanceledModalOpen(!isAddCanceledModalOpen)}
-          onAddressCanceled={(reason: string) => cancelCurrentAddress(reason)}
-        ></Modal>
-        <ConfirmationModal
-          isOpen={isConfirmationModalOpen}
-          onOpenChange={() => setIsConfirmationModalOpen(!isConfirmationModalOpen)}
-          onConfirmed={() => resetData()}
-        ></ConfirmationModal>
-        <div 
-          id="dark_background" 
-          className={isSidebarOpen ? "shown" : ""}
-          onClick={() => setIsSidebarOpen(false)}
-        ></div>
         <CanceledAddressesList
           appMode={appMode}
           canceledAmount={canceledAmount}
@@ -729,96 +729,96 @@ function App() {
             onStreetAdded={handleStreetAdded}
           ></StreetInput>
         </div>
-        <div
-          id="sidebar"
-          className={isSidebarOpen ? "open" : ""}
-        >
-          <div id="mode_buttons">
-            <div className="button_wrapper">
-              <div className="button_container">
-                <button onClick={() => changeAppMode('view canceled')} className={"canceled_button view_canceled " + (appMode == 'view canceled' ? "active" : "")}>
-                  <FontAwesomeIcon icon={faExclamation} />
-                  <FontAwesomeIcon icon={faExclamation} />
-                  <FontAwesomeIcon icon={faExclamation} />
-                </button>
-              </div>
-              <div className="button_desc">
-                Режим перегляду скасованих адрес
-              </div>
+      </main>
+      <div
+        id="sidebar"
+        className={isSidebarOpen ? "open" : ""}
+      >
+        <div id="mode_buttons">
+          <div className="button_wrapper">
+            <div className="button_container">
+              <button onClick={() => changeAppMode('view canceled')} className={"canceled_button view_canceled " + (appMode == 'view canceled' ? "active" : "")}>
+                <FontAwesomeIcon icon={faExclamation} />
+                <FontAwesomeIcon icon={faExclamation} />
+                <FontAwesomeIcon icon={faExclamation} />
+              </button>
             </div>
-            <div className="button_wrapper">
-              <div className="button_container">
-                <button onClick={() => changeAppMode('add canceled')} className={"canceled_button " + (appMode == 'add canceled' ? "active" : "")}>
-                  <FontAwesomeIcon icon={faPlus} id="plus_icon"/>
-                  <FontAwesomeIcon icon={faExclamation} />
-                </button>
-              </div>
-              <div className="button_desc">
-                Режим позначенння скасованих адрес
-              </div>
-            </div>
-            <div className="button_wrapper">
-              <div className="button_container">
-                <button onClick={() => changeAppMode('checklist')} className={appMode == 'checklist' ? "active" : ""}>
-                  <FontAwesomeIcon icon={faSquareCheck} />
-                </button>
-              </div>
-              <div className="button_desc">
-                Режим позначення відвіданих адрес
-              </div>
-            </div>
-            <div className="button_wrapper">
-              <div className="button_container">
-                <button onClick={() => changeAppMode('addresses')} className={appMode == 'addresses' ? "active" : ""}>
-                  <FontAwesomeIcon icon={faLocationDot} />
-                </button>
-              </div>
-              <div className="button_desc">
-                Режим редагування адрес
-              </div>
-            </div>
-            <div className="button_wrapper">
-              <div className="button_container">
-                <button onClick={() => changeAppMode('streets')} className={appMode == 'streets' ? "active" : ""}>
-                  <FontAwesomeIcon icon={faPen} />
-                </button>
-              </div>
-              <div className="button_desc">
-                Режим редагування списку вулиць
-              </div>
-            </div>
-            <div className="button_wrapper">
-              <div className="button_container">
-                <button onClick={() => changeAppMode('default streets')} className={appMode == 'default streets' ? "active" : ""} id="defaults_button">
-                  <div></div>
-                  <div id="midline"></div>
-                  <div></div>
-                </button>
-              </div>
-              <div className="button_desc">
-                Режим редагування списку вулиць за замовчуванням
-              </div>
-            </div>
-            <div className="button_wrapper">
-              <div className="button_container" id="reset_button_container">
-                <button {...longResetPress}>
-                  <FontAwesomeIcon icon={faRotateRight} />
-                </button>
-              </div>
-              <div className="button_desc" id="reset_button_desc">
-                Скинути все
-              </div>
+            <div className="button_desc">
+              Режим перегляду скасованих адрес
             </div>
           </div>
-          <button
-            id="toggle_sidebar_button"
-            className={isSidebarOpen ? "open" : ""}
-            onClick={() => {setIsSidebarOpen(!isSidebarOpen); handleReorderingReset()}}
-          >
-            <FontAwesomeIcon icon={faAngleLeft} />
-          </button>
+          <div className="button_wrapper">
+            <div className="button_container">
+              <button onClick={() => changeAppMode('add canceled')} className={"canceled_button " + (appMode == 'add canceled' ? "active" : "")}>
+                <FontAwesomeIcon icon={faPlus} id="plus_icon"/>
+                <FontAwesomeIcon icon={faExclamation} />
+              </button>
+            </div>
+            <div className="button_desc">
+              Режим позначенння скасованих адрес
+            </div>
+          </div>
+          <div className="button_wrapper">
+            <div className="button_container">
+              <button onClick={() => changeAppMode('checklist')} className={appMode == 'checklist' ? "active" : ""}>
+                <FontAwesomeIcon icon={faSquareCheck} />
+              </button>
+            </div>
+            <div className="button_desc">
+              Режим позначення відвіданих адрес
+            </div>
+          </div>
+          <div className="button_wrapper">
+            <div className="button_container">
+              <button onClick={() => changeAppMode('addresses')} className={appMode == 'addresses' ? "active" : ""}>
+                <FontAwesomeIcon icon={faLocationDot} />
+              </button>
+            </div>
+            <div className="button_desc">
+              Режим редагування адрес
+            </div>
+          </div>
+          <div className="button_wrapper">
+            <div className="button_container">
+              <button onClick={() => changeAppMode('streets')} className={appMode == 'streets' ? "active" : ""}>
+                <FontAwesomeIcon icon={faPen} />
+              </button>
+            </div>
+            <div className="button_desc">
+              Режим редагування списку вулиць
+            </div>
+          </div>
+          <div className="button_wrapper">
+            <div className="button_container">
+              <button onClick={() => changeAppMode('default streets')} className={appMode == 'default streets' ? "active" : ""} id="defaults_button">
+                <div></div>
+                <div id="midline"></div>
+                <div></div>
+              </button>
+            </div>
+            <div className="button_desc">
+              Режим редагування списку вулиць за замовчуванням
+            </div>
+          </div>
+          <div className="button_wrapper">
+            <div className="button_container" id="reset_button_container">
+              <button {...longResetPress}>
+                <FontAwesomeIcon icon={faRotateRight} />
+              </button>
+            </div>
+            <div className="button_desc" id="reset_button_desc">
+              Скинути все
+            </div>
+          </div>
         </div>
-      </main>
+        <button
+          id="toggle_sidebar_button"
+          className={isSidebarOpen ? "open" : ""}
+          onClick={() => {setIsSidebarOpen(!isSidebarOpen); handleReorderingReset()}}
+        >
+          <FontAwesomeIcon icon={faAngleLeft} />
+        </button>
+      </div>
     </>
   )
 }
