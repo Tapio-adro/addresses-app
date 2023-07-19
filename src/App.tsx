@@ -63,7 +63,6 @@ function App() {
     if (localAppMode !== null) {
       changeAppMode(JSON.parse(localAppMode))
     }
-    console.log(shouldResetData);
     if (shouldResetData) {
       resetData();
     }
@@ -77,11 +76,9 @@ function App() {
   }, [isSidebarOpen])
   useEffect(() => {
     window.localStorage.setItem('streetsData', JSON.stringify(streets))
-    console.log('update');
   }, [streets])
   useEffect(() => {
     window.localStorage.setItem('currentStreetIndex', JSON.stringify(currentStreetIndex))
-    console.log('update index');
   }, [currentStreetIndex])
   useEffect(() => {
     recalculateCanceledAmount();
@@ -320,7 +317,6 @@ function App() {
     let streetIndex = currentCancelationAddress.streetIndex;
     let addressIndex = currentCancelationAddress.numberIndex;
     let isDefaultAddress = currentCancelationAddress.isDefaultAddress;
-    // console.log(isDefaultAddress);
     const nextStreets: StreetObject[] = streets.map(street => {
       if (street.index != streetIndex || (appMode != 'checklist' && appMode != 'add canceled')) {
         return street;
@@ -504,7 +500,6 @@ function App() {
       ],
       isBeingReordered: false
     };
-    console.log(newStreet);
     setCurrentStreetIndex(currentStreetIndex + 1)
     setStreetInputValue('');
     nextStreets.push(newStreet);
@@ -512,14 +507,12 @@ function App() {
     document.getElementById('street_input')?.focus();
     setTimeout(() => {
       if (mainElement.current !== null) {
-        console.log('scroll');
         mainElement.current.scrollTo({left: 0, top: mainElement.current.scrollHeight, behavior: "smooth"})
       }
     }, 500)
   }
 
   function tryResetData () {
-    console.log('try reset');
     setIsConfirmationModalOpen(true)
     setIsSidebarOpen(false);
   }
