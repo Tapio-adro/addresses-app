@@ -686,7 +686,7 @@ function App() {
   }) : null;
 
   return (
-    <>
+    <div id="wrapper">
       <Modal
         isOpen={isAddCanceledModalOpen}
         currentAddress={currentCancelationAddress}
@@ -703,6 +703,7 @@ function App() {
         className={isSidebarOpen ? "shown" : ""}
         onClick={() => setIsSidebarOpen(false)}
       ></div>
+      <div className="overlap_left"></div>
       <main ref={mainElement}>
         <CanceledAddressesList
           appMode={appMode}
@@ -723,97 +724,104 @@ function App() {
             onStreetAdded={handleStreetAdded}
           ></StreetInput>
         </div>
-      </main>
-      <div
-        id="sidebar"
-        className={isSidebarOpen ? "open" : ""}
-      >
-        <div id="mode_buttons">
-          <div className="button_wrapper">
-            <div className="button_container">
-              <button onClick={() => changeAppMode('view canceled')} className={"canceled_button view_canceled " + (appMode == 'view canceled' ? "active" : "")}>
-                <FontAwesomeIcon icon={faExclamation} />
-                <FontAwesomeIcon icon={faExclamation} />
-                <FontAwesomeIcon icon={faExclamation} />
-              </button>
-            </div>
-            <div className="button_desc">
-              {getString('viewCanceledMode')}
-            </div>
-          </div>
-          <div className="button_wrapper">
-            <div className="button_container">
-              <button onClick={() => changeAppMode('add canceled')} className={"canceled_button " + (appMode == 'add canceled' ? "active" : "")}>
-                <FontAwesomeIcon icon={faPlus} id="plus_icon"/>
-                <FontAwesomeIcon icon={faExclamation} />
-              </button>
-            </div>
-            <div className="button_desc">
-              {getString('addCanceledMode')}
-            </div>
-          </div>
-          <div className="button_wrapper">
-            <div className="button_container">
-              <button onClick={() => changeAppMode('checklist')} className={appMode == 'checklist' ? "active" : ""}>
-                <FontAwesomeIcon icon={faSquareCheck} />
-              </button>
-            </div>
-            <div className="button_desc">
-              {getString('checklistMode')}
-            </div>
-          </div>
-          <div className="button_wrapper">
-            <div className="button_container">
-              <button onClick={() => changeAppMode('addresses')} className={appMode == 'addresses' ? "active" : ""}>
-                <FontAwesomeIcon icon={faLocationDot} />
-              </button>
-            </div>
-            <div className="button_desc">
-              {getString('addressesMode')}
-            </div>
-          </div>
-          <div className="button_wrapper">
-            <div className="button_container">
-              <button onClick={() => changeAppMode('streets')} className={appMode == 'streets' ? "active" : ""}>
-                <FontAwesomeIcon icon={faPen} />
-              </button>
-            </div>
-            <div className="button_desc">
-              {getString('streetsMode')}
-            </div>
-          </div>
-          <div className="button_wrapper">
-            <div className="button_container">
-              <button onClick={() => changeAppMode('default streets')} className={appMode == 'default streets' ? "active" : ""} id="defaults_button">
-                <div></div>
-                <div id="midline"></div>
-                <div></div>
-              </button>
-            </div>
-            <div className="button_desc">
-              {getString('defaultStreetsMode')}
-            </div>
-          </div>
-          <div className="button_wrapper">
-            <div className="button_container" id="reset_button_container">
-              <button {...longResetPress}>
-                <FontAwesomeIcon icon={faRotateRight} />
-              </button>
-            </div>
-            <div className="button_desc" id="reset_button_desc">
-              {getString('resetAll')}
+        <div id="sidebar_main_wrapper">
+          <div id="sidebar_main">
+            <div id="sidebar_wrapper">
+              <div
+                id="sidebar"
+                className={isSidebarOpen ? "open" : ""}
+              >
+                <div id="mode_buttons">
+                  <div className="button_wrapper">
+                    <div className="button_container">
+                      <button onClick={() => changeAppMode('view canceled')} className={"canceled_button view_canceled " + (appMode == 'view canceled' ? "active" : "")}>
+                        <FontAwesomeIcon icon={faExclamation} />
+                        <FontAwesomeIcon icon={faExclamation} />
+                        <FontAwesomeIcon icon={faExclamation} />
+                      </button>
+                    </div>
+                    <div className="button_desc">
+                      {getString('viewCanceledMode')}
+                    </div>
+                  </div>
+                  <div className="button_wrapper">
+                    <div className="button_container">
+                      <button onClick={() => changeAppMode('add canceled')} className={"canceled_button " + (appMode == 'add canceled' ? "active" : "")}>
+                        <FontAwesomeIcon icon={faPlus} id="plus_icon"/>
+                        <FontAwesomeIcon icon={faExclamation} />
+                      </button>
+                    </div>
+                    <div className="button_desc">
+                      {getString('addCanceledMode')}
+                    </div>
+                  </div>
+                  <div className="button_wrapper">
+                    <div className="button_container">
+                      <button onClick={() => changeAppMode('checklist')} className={appMode == 'checklist' ? "active" : ""}>
+                        <FontAwesomeIcon icon={faSquareCheck} />
+                      </button>
+                    </div>
+                    <div className="button_desc">
+                      {getString('checklistMode')}
+                    </div>
+                  </div>
+                  <div className="button_wrapper">
+                    <div className="button_container">
+                      <button onClick={() => changeAppMode('addresses')} className={appMode == 'addresses' ? "active" : ""}>
+                        <FontAwesomeIcon icon={faLocationDot} />
+                      </button>
+                    </div>
+                    <div className="button_desc">
+                      {getString('addressesMode')}
+                    </div>
+                  </div>
+                  <div className="button_wrapper">
+                    <div className="button_container">
+                      <button onClick={() => changeAppMode('streets')} className={appMode == 'streets' ? "active" : ""}>
+                        <FontAwesomeIcon icon={faPen} />
+                      </button>
+                    </div>
+                    <div className="button_desc">
+                      {getString('streetsMode')}
+                    </div>
+                  </div>
+                  <div className="button_wrapper">
+                    <div className="button_container">
+                      <button onClick={() => changeAppMode('default streets')} className={appMode == 'default streets' ? "active" : ""} id="defaults_button">
+                        <div></div>
+                        <div id="midline"></div>
+                        <div></div>
+                      </button>
+                    </div>
+                    <div className="button_desc">
+                      {getString('defaultStreetsMode')}
+                    </div>
+                  </div>
+                  <div className="button_wrapper">
+                    <div className="button_container" id="reset_button_container">
+                      <button {...longResetPress}>
+                        <FontAwesomeIcon icon={faRotateRight} />
+                      </button>
+                    </div>
+                    <div className="button_desc" id="reset_button_desc">
+                      {getString('resetAll')}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  id="toggle_sidebar_button"
+                  className={isSidebarOpen ? "open" : ""}
+                  onClick={() => {setIsSidebarOpen(!isSidebarOpen); handleReorderingReset()}}
+                >
+                  <FontAwesomeIcon icon={faAngleLeft} />
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        <button
-          id="toggle_sidebar_button"
-          className={isSidebarOpen ? "open" : ""}
-          onClick={() => {setIsSidebarOpen(!isSidebarOpen); handleReorderingReset()}}
-        >
-          <FontAwesomeIcon icon={faAngleLeft} />
-        </button>
-      </div>
-    </>
+      </main>
+      <div className="overlap_right"></div>
+    </div>
   )
 }
 

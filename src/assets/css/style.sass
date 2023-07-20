@@ -14,17 +14,47 @@ $darkgrey: #404040
 body
   height: 100%
   // overflow: hidden
+#root
+  position: relative
+#wrapper
+  width: 360px
+  margin: 0 auto
+.overlap_left
+  top: 0
+  left: 0
+  width: calc( (100% - 360px) / 2 - 3px)
+  height: 100%
+  z-index: 3
+  pointer-events: none
+  position: fixed
+  background-color: #fff
+  box-shadow: inset -5px 0 5px -2px rgba(0, 0, 0, 0.2)
+  border-right: 3px solid rgba(0, 0, 0, 0.3)
+.overlap_right
+  top: 0
+  right: 0
+  width: calc( (100% - 360px) / 2 - 3px)
+  height: 100%
+  z-index: 3
+  pointer-events: none
+  position: fixed
+  background-color: #fff
+  box-shadow: inset 5px 0 5px -2px rgba(0, 0, 0, 0.2)
+  border-left: 3px solid rgba(0, 0, 0, 0.3)
 main
-  // height: calc( 100vh - 50px )
+  position: relative
   // padding: 10px
   // padding-left: 5px
-  margin-right: 50px
+  margin-right: 70px
   // overflow: hidden
   // overflow-y: scroll
+
 #list
   zoom: 1.4
   margin: 10px
   margin-left: 5px
+  margin-top: 0
+  padding-top: 10px
   transition: 0.5s
   &.any_streets_mode
 #list .list_item_wrapper
@@ -157,11 +187,29 @@ main
   &:active
     background-position: bottom
 
-#sidebar
-  position: fixed
-  right: 0
+#sidebar_main_wrapper
+  position: absolute
+  height: 100%
   top: 0
+  left: 0
+  pointer-events: none
+#sidebar_main
+  width: 360px
+  position: relative
+#sidebar_wrapper
+  position: absolute
   width: 200px
+  height: 100%
+  top: 0
+  right: 0
+  zoom: 1.4
+#sidebar
+  pointer-events: all
+  position: fixed
+  width: 200px
+  // width: 50px
+  // top: 0
+  // right: 0
   height: 100%
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1)
   border-top-left-radius: 10px
@@ -172,9 +220,9 @@ main
   z-index: 2
   display: flex
   flex-direction: column
+  margin-left: 5px
   &.open
     transform: translateX(0px)
-
 #mode_buttons
   display: flex
   flex-direction: column
