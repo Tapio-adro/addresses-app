@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import getString from '../assets/shared/UILang.js'
 
 export default function ConfirmationModal({
   isOpen,
@@ -28,11 +29,15 @@ export default function ConfirmationModal({
       <div className={modalWrapperClasses}>
         <div className={modalContentClasses} id="confirmation">
           <div className="header">
-            Справді скинути дані?
+            {getString('shouldReset')}
           </div>
           <div className="buttons">
-            <div className="accept" onClick={() => onConfirmed()}>Так</div>
-            <div className="decline" onClick={() => onOpenChange()}>Ні</div>
+            <div className="accept" onClick={() => onConfirmed()}>
+              {getString('resetYes')}
+            </div>
+            <div className="decline" onClick={() => onOpenChange()}>
+              {getString('resetNo')}
+            </div>
           </div>
         </div>
       </div>

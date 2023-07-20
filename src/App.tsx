@@ -10,6 +10,7 @@ import CanceledAddressesList from './components/CanceledAddressesList.tsx';
 import './assets/css/style.css'
 import { canceledAddressesData } from './assets/data/ReasonsData.tsx';
 import useLongPress from './assets/shared/useLongPress.js'
+import getString from './assets/shared/UILang.js'
 
 import { StreetObject, AddressObject, StreetAndNumber, AppMode, ReasonWithAddressesObject } from './assets/shared/lib/types'
 
@@ -737,7 +738,7 @@ function App() {
               </button>
             </div>
             <div className="button_desc">
-              Режим перегляду скасованих адрес
+              {getString('viewCanceledMode')}
             </div>
           </div>
           <div className="button_wrapper">
@@ -748,7 +749,7 @@ function App() {
               </button>
             </div>
             <div className="button_desc">
-              Режим позначенння скасованих адрес
+              {getString('addCanceledMode')}
             </div>
           </div>
           <div className="button_wrapper">
@@ -758,7 +759,7 @@ function App() {
               </button>
             </div>
             <div className="button_desc">
-              Режим позначення відвіданих адрес
+              {getString('checklistMode')}
             </div>
           </div>
           <div className="button_wrapper">
@@ -768,7 +769,7 @@ function App() {
               </button>
             </div>
             <div className="button_desc">
-              Режим редагування адрес
+              {getString('addressesMode')}
             </div>
           </div>
           <div className="button_wrapper">
@@ -778,7 +779,7 @@ function App() {
               </button>
             </div>
             <div className="button_desc">
-              Режим редагування списку вулиць
+              {getString('streetsMode')}
             </div>
           </div>
           <div className="button_wrapper">
@@ -790,7 +791,7 @@ function App() {
               </button>
             </div>
             <div className="button_desc">
-              Режим редагування списку вулиць за замовчуванням
+              {getString('defaultStreetsMode')}
             </div>
           </div>
           <div className="button_wrapper">
@@ -800,7 +801,7 @@ function App() {
               </button>
             </div>
             <div className="button_desc" id="reset_button_desc">
-              Скинути все
+              {getString('resetAll')}
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import { ReasonWithAddressesObject, AppMode } from '../assets/shared/lib/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faXmark } from '@fortawesome/free-solid-svg-icons';
+import getString from '../assets/shared/UILang.js'
 
 export default function CanceledAddressesList({
   appMode,
@@ -73,7 +74,9 @@ export default function CanceledAddressesList({
       <div className="reasons_wrapper">
         <div className={headerClasses}>
           <div className="addresses_amount">{canceledAmount}</div>
-          <div className="header_text">Скасовані адреси</div>
+          <div className="header_text">
+            {getString('canceledAddresses')}
+          </div>
         </div>
         <div className="reasons_container">
           {reasonsList}

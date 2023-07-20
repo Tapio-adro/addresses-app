@@ -2,6 +2,7 @@ import { useState } from 'react'
 import classNames from 'classnames';
 import { reasonsData } from '../assets/data/ReasonsData';
 import { ReasonObject, StreetAndNumber } from '../assets/shared/lib/types';
+import getString from '../assets/shared/UILang.js'
 
 export default function Modal({
   isOpen,
@@ -94,9 +95,11 @@ export default function Modal({
           <div className="top">{currentAddress.street + ' ' + currentAddress.number}</div>
           <div className="middle">{reasonsList}</div>
           <div className="bottom">
-            <div className={acceptButtonClasses} onClick={() => markAddressCanceled()}>Позначити</div>
+            <div className={acceptButtonClasses} onClick={() => markAddressCanceled()}>
+              {getString('cancelYes')}
+            </div>
             <div className="cancel" onClick={() => resetAndClose()}>
-              Скасувати
+              {getString('cancelNo')}
             </div>
           </div>
         </div>
